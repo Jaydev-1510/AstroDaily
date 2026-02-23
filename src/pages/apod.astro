@@ -1,6 +1,7 @@
 ---
 import { database } from "@lib/database";
 import Layout from "@layouts/base.astro";
+import ApodCard from "@components/apodCard.astro";
 
 export const prerender = false;
 const { data, error } = await database
@@ -21,51 +22,5 @@ Astro.response.headers.set(
 ---
 
 <Layout>
-  <style>
-    @keyframes fadeUp {
-      from {
-        opacity: 0;
-        transform: translateY(16px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-  </style>
-
-  <div
-    class="min-h-screen bg-black text-zinc-300 flex items-center justify-center px-4"
-  >
-    <div class="max-w-6xl w-full flex flex-col items-center gap-16">
-      <h1
-        class="text-center text-3xl md:text-5xl mt-5 font-bold tracking-tight text-white opacity-0 animate-[fadeUp_0.8s_ease-out_forwards]"
-      >
-        {data?.title}
-      </h1>
-      <figure
-        class="w-full flex justify-center opacity-0 animate-[fadeUp_0.9s_ease-out_0.15s_forwards]"
-      >
-        <img
-          src={data?.hdurl}
-          alt={data?.title}
-          class="w-full md:w-4/5 rounded-2xl ring-1 ring-white/10 shadow-[0_40px_160px_rgba(255,255,255,0.08)] transition-transform duration-700 ease-out hover:scale-[1.015]"
-        />
-      </figure>
-      <div
-        class="w-20 h-px bg-white/15 opacity-0 animate-[fadeUp_0.6s_ease-out_0.3s_forwards]"
-      >
-      </div>
-      <article
-        class="max-w-[68ch] md:max-w-5/7 md:text-lg leading-relaxed text-zinc-400 opacity-0 animate-[fadeUp_0.8s_ease-out_0.45s_forwards]"
-      >
-        <p class="text-justify md:text-left">
-          {data?.explanation}
-        </p>
-        <p class="text-shadow-zinc-500 mt-2 text-center">
-          &copy; {data?.copyright || "NASA"}
-        </p>
-      </article>
-    </div>
-  </div>
+  <ApodCard Apod={data} />
 </Layout>
