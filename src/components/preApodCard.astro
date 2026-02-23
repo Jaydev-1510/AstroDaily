@@ -1,0 +1,57 @@
+---
+const { Apod, date } = Astro.props;
+const year = date.split("-")[0];
+const month = date.split("-")[1];
+const day = date.split("-")[2];
+---
+
+<a
+  href={`/archive/${year}/${month}/${day}`}
+  class="group relative lg:w-full md:full w-9/10 overflow-hidden rounded-2xl border border-white/10 bg-white/3 transition-all duration-500 ease-out hover:border-white/20 hover:bg-white/6 hover:shadow-[0_20px_50px_rgba(0,0,0,0.5)]"
+>
+  <div class="overflow-hidden aspect-video">
+    <img
+      loading="lazy"
+      class="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+      src={Apod?.url ||
+        "https://astro.build/assets/press/astro-logo-light-gradient.png"}
+      alt={Apod?.title || ""}
+    />
+  </div>
+
+  <div class="p-5 flex flex-row items-center">
+    <div class="flex flex-col gap-1 min-w-[95%]">
+      <span
+        class="text-[10px] font-semibold uppercase tracking-[0.2em] text-white/40"
+      >
+        {Apod?.date}
+      </span>
+
+      <h1
+        class="font-sans text-xl font-medium tracking-tight text-white/90 line-clamp-1"
+      >
+        {Apod?.title || "Untitled Cosmic Event"}
+      </h1>
+    </div>
+    <div class="h-full group-hover:flex items-center justify-center transition-transform duration-200 ease-out scale-0 group-hover:scale-105 -translate-x-5 group-hover:translate-x-0">
+      <svg
+        data-testid="geist-icon"
+        height="16"
+        stroke-linejoin="round"
+        style="color:currentColor"
+        viewBox="0 0 16 16"
+        width="16"
+        ><path
+          fill-rule="evenodd"
+          clip-rule="evenodd"
+          d="M5.50001 1.93933L6.03034 2.46966L10.8536 7.29288C11.2441 7.68341 11.2441 8.31657 10.8536 8.7071L6.03034 13.5303L5.50001 14.0607L4.43935 13L4.96968 12.4697L9.43935 7.99999L4.96968 3.53032L4.43935 2.99999L5.50001 1.93933Z"
+          fill="currentColor"></path></svg
+      >
+    </div>
+  </div>
+
+  <div
+    class="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100 bg-gradient-to-tr from-white/5 to-transparent"
+  >
+  </div>
+</a>

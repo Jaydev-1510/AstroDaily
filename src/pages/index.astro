@@ -3,8 +3,24 @@ import Layout from "@layouts/base.astro";
 ---
 
 <Layout>
-  <h1 class="text-center font-bold text-4xl mt-5">astroDaily</h1>
-  <div class="flex flex-col items-center justify-center mt-10">
-    <a class="hover:text-white text-zinc-300 transition-colors duration-300" href="./apod">Astronomy Picture of the Day</a>
+  <div class="flex flex-col justify-center items-center h-screen">
+    <h1 class="relative text-center gradient-text text-transparent bg-clip-text font-bold md:text-9xl text-7xl mt-5">
+      astroDaily
+    </h1>
+    <div class="relative flex flex-col items-center justify-center mt-10">
+      <a
+        class="hover:text-white text-zinc-300 transition-colors duration-300 decoration hover:decoration-wavy underline"
+        href="./apod">Astronomy Picture of the Day</a
+      >
+    </div>
   </div>
 </Layout>
+<style>
+.gradient-text {
+    background: linear-gradient(0deg, #000, #FFF);
+    background-size: 300% 100%;
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+}</style>

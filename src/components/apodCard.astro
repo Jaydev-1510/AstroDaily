@@ -1,5 +1,5 @@
 ---
-const { Apod } = Astro.props
+const { Apod } = Astro.props;
 ---
 
 <style>
@@ -16,7 +16,7 @@ const { Apod } = Astro.props
 </style>
 
 <div
-  class="min-h-screen bg-black text-zinc-300 flex  mt-20 mb-20 items-center justify-center px-4"
+  class="min-h-screen bg-black text-zinc-300 flex mt-20 mb-20 items-center justify-center px-4"
 >
   <div class="max-w-6xl w-full flex flex-col items-center gap-16">
     <h1
@@ -28,8 +28,9 @@ const { Apod } = Astro.props
       class="w-full flex justify-center opacity-0 animate-[fadeUp_0.9s_ease-out_0.15s_forwards]"
     >
       <img
-        src={Apod?.hdurl}
-        alt={Apod?.title}
+        loading="eager"
+        src={Apod?.url || "https://astro.build/assets/press/astro-logo-light-gradient.png"}
+        alt={Apod?.title || ""}
         class="w-full md:w-4/5 rounded-2xl ring-1 ring-white/10 shadow-[0_40px_160px_rgba(255,255,255,0.08)] transition-transform duration-700 ease-out hover:scale-[1.015]"
       />
     </figure>
