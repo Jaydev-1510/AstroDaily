@@ -1,18 +1,23 @@
 ---
 import { database } from "@lib/database";
 import Layout from "@layouts/base.astro";
-import what from "@components/apodCard.astro";
 
-const today = new Date();
-const year = today.getFullYear();
-const month = String(today.getMonth() + 1).padStart(2, "0");
-const day = String(today.getDate()).padStart(2, "0");
-
+export const prerender = false;
 const { data, error } = await database
   .from("APODs")
-  .select()
-  .eq("date", `${year}-${month}-${day}`);
-const Apod = data?.[0];
+  .select("*")
+  .order("date", { ascending: false })
+  .limit(1)
+  .single();
+
+if (error || !data) {
+  return Astro.redirect("/404");
+}
+
+Astro.response.headers.set(
+  "Cache-Control",
+  "public, s-maxage=31536000, stale-while-revalidate",
+);
 ---
 
 <Layout>
@@ -36,14 +41,14 @@ const Apod = data?.[0];
       <h1
         class="text-center text-3xl md:text-5xl mt-5 font-bold tracking-tight text-white opacity-0 animate-[fadeUp_0.8s_ease-out_forwards]"
       >
-        {Apod?.title}
+        {data?.title}
       </h1>
       <figure
         class="w-full flex justify-center opacity-0 animate-[fadeUp_0.9s_ease-out_0.15s_forwards]"
       >
         <img
-          src={Apod?.hdurl}
-          alt={Apod?.title}
+          src={data?.hdurl}
+          alt={data?.title}
           class="w-full md:w-4/5 rounded-2xl ring-1 ring-white/10 shadow-[0_40px_160px_rgba(255,255,255,0.08)] transition-transform duration-700 ease-out hover:scale-[1.015]"
         />
       </figure>
@@ -52,10 +57,13 @@ const Apod = data?.[0];
       >
       </div>
       <article
-        class="max-w-[68ch] md:text-lg leading-relaxed text-zinc-400 opacity-0 animate-[fadeUp_0.8s_ease-out_0.45s_forwards]"
+        class="max-w-[68ch] md:max-w-5/7 md:text-lg leading-relaxed text-zinc-400 opacity-0 animate-[fadeUp_0.8s_ease-out_0.45s_forwards]"
       >
-        <p class="text-justify mb-10 md:text-left">
-          {Apod?.explanation}
+        <p class="text-justify md:text-left">
+          {data?.explanation}
+        </p>
+        <p class="text-shadow-zinc-500 mt-2 text-center">
+          &copy; {data?.copyright || "NASA"}
         </p>
       </article>
     </div>
