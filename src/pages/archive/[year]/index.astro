@@ -1,0 +1,94 @@
+---
+import { database } from "@lib/database";
+import ApodCard from "@components/preApodCard.astro";
+import Layout from "@layouts/base.astro";
+
+const { year } = Astro.params;
+
+if (!year) {
+  return Astro.redirect("/archive");
+}
+
+const startDate = `${year}-01-01`;
+const endDate = `${year}-12-31`;
+
+const { data: days, error } = await database
+  .from("APODs")
+  .select("date, title, url")
+  .gte("date", startDate)
+  .lte("date", endDate)
+  .order("date", { ascending: true });
+
+const groupedByMonth = days?.reduce(
+  (acc, day) => {
+    const monthNumber = day.date.split("-")[1];
+    if (!acc[monthNumber]) acc[monthNumber] = [];
+    acc[monthNumber].push(day);
+    return acc;
+  },
+  {} as Record<string, typeof days>,
+);
+
+const getMonthName = (m: string) =>
+  new Date(Number(year), Number(m) - 1).toLocaleString("default", {
+    month: "long",
+  });
+
+const months = Object.keys(groupedByMonth || {}).sort();
+---
+
+<Layout title={`Archive ${year}`}>
+  <main class="pt-32 px-6 max-w-7xl mx-auto">
+    <header class="mb-20 text-center">
+      <h1
+        class="font-sans font-bold text-9xl md:text-[12rem] tracking-tighter absolute left-1/2 -translate-x-1/2 top-20 select-none text-center bg-linear-0 from-black to-zinc-500 text-transparent bg-clip-text hover:tracking-normal duration-700"
+      >
+        {year}
+      </h1>
+      <h2
+        class="relative text-4xl md:text-6xl text-shadow-black font-bold text-zinc-100 tracking-tight mt-10 font-sans"
+      >
+        Yearly Archive
+      </h2>
+      <div class="h-1 w-12 bg-zinc-500 mx-auto mt-6 rounded-full"></div>
+    </header>
+
+    <nav
+      class="grid bg-white/2 grid-cols-6 md:flex lg:flex justify-center gap-6 md:gap-10 lg:gap-10 mb-20 place-items-center border border-[#252525] rounded-3xl py-7 px-5"
+    >
+      {
+        months.map((m) => (
+          <a
+            href={`#${getMonthName(m)}`}
+            class="text-sm font-bold uppercase tracking-widest text-zinc-500 hover:text-white transition-colors duration-500"
+          >
+            {getMonthName(m).slice(0, 3)}
+          </a>
+        ))
+      }
+    </nav>
+
+    <div class="space-y-32">
+      {
+        months.map((m) => (
+          <section id={getMonthName(m)} class="scroll-mt-32">
+            <div class="flex items-baseline gap-4 mb-10 border-b border-white/5 pb-4">
+              <h3 class="text-3xl font-bold text-white tracking-tight">
+                {getMonthName(m)}
+              </h3>
+              <span class="text-zinc-500 font-mono text-sm">
+                {groupedByMonth[m].length} items
+              </span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-10 place-items-center">
+              {groupedByMonth[m].map((item) => (
+                <ApodCard Apod={item} date={item.date} />
+              ))}
+            </div>
+          </section>
+        ))
+      }
+    </div>
+  </main>
+</Layout>

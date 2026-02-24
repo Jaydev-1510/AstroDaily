@@ -2,8 +2,7 @@
 import "@styles/global.css";
 import NavBar from "@components/navBar.astro";
 import Footer from "@components/footer.astro";
-import { ClientRouter } from "Astro:transitions";
-const { ogImage } = Astro.props;
+const { ogImage, title } = Astro.props;
 ---
 
 <html lang="en">
@@ -14,12 +13,12 @@ const { ogImage } = Astro.props;
     <meta property="og:image" content={ogImage} />
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
-    <title></title>
+    <title>{title}</title>
   </head>
   <body
     class="bg-black text-white scroll-smooth min-h-dvh font-sans antialiased"
   >
-    <NavBar server:setup />
+    <NavBar />
     <slot />
     <Footer />
   </body>

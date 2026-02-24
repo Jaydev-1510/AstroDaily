@@ -5,20 +5,60 @@ import Layout from "@layouts/base.astro";
 
 const { year, month } = Astro.params;
 
-const startDate = `${year}-${month.padStart(2, "0")}-01`;
-const lastDay = new Date(parseInt(year), parseInt(month), 0).getDate();
-const endDate = `${year}-${month.padStart(2, "0")}-${lastDay}`;
+if (!year || !month) {
+  return Astro.redirect("/archive");
+}
+
+const paddedMonth = month.padStart(2, "0");
+const startDate = `${year}-${paddedMonth}-01`;
+
+const lastDay = new Date(Number(year), Number(month), 0).getDate();
+const endDate = `${year}-${paddedMonth}-${lastDay}`;
 
 const { data: days, error } = await database
   .from("APODs")
-  .select("*")
+  .select("date, title, url")
   .gte("date", startDate)
   .lte("date", endDate)
   .order("date", { ascending: true });
+
+const dateObj = new Date(Number(year), Number(month) - 1);
+const monthName = dateObj.toLocaleString("default", { month: "long" });
+const monthShort = dateObj.toLocaleString("default", { month: "short" });
 ---
 
-<Layout>
-  <div class="my-20 md:p-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 place-items-center">
-    {days?.map((item) => <ApodCard Apod={item} date={item.date} />)}
-  </div>
+<Layout title={`${monthName} ${year} | Archive`}>
+  <main class="relative min-h-screen pt-32 pb-20 px-6 max-w-7xl mx-auto">
+    <header class="mb-20 text-center">
+    <h1
+      class="font-sans font-bold text-9xl md:text-[12rem] tracking-tighter absolute left-1/2 -translate-x-1/2 top-20 select-none text-center bg-linear-0 from-black to-zinc-500 text-transparent bg-clip-text duration-700 hover:to-zinc-200 transition-colors"
+    >
+      {year}
+    </h1>
+    <h2
+      class="relative text-4xl md:text-6xl text-shadow-black font-bold text-zinc-300 tracking-tight mt-10 font-sans hover:tracking-normal duration-500"
+    >
+      {monthName} Snapshot
+    </h2>
+    <div class="h-1 w-1/2 border-b  border-zinc-500 mx-auto mt-6"></div>
+  </header>
+
+    <div class="relative z-10">
+      {
+        days && days.length > 0 ? (
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-10 place-items-center">
+            {days.map((item) => (
+              <ApodCard Apod={item} date={item.date} />
+            ))}
+          </div>
+        ) : (
+          <div class="flex flex-col items-center justify-center py-40 border border-dashed border-white/10 rounded-3xl">
+            <p class="text-sm tracking-widest uppercase text-zinc-600">
+              No cosmic data found for this period
+            </p>
+          </div>
+        )
+      }
+    </div>
+  </main>
 </Layout>

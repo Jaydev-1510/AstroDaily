@@ -1,52 +1,141 @@
 ---
+import { Image } from "astro:assets";
 const { Apod } = Astro.props;
 ---
 
-<style>
-  @keyframes fadeUp {
-    from {
-      opacity: 0;
-      transform: translateY(16px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-</style>
-
 <div
-  class="min-h-screen bg-black text-zinc-300 flex mt-20 mb-20 items-center justify-center px-4"
+  class="relative min-h-screen bg-[#050505] text-zinc-300 selection:bg-white selection:text-black"
 >
-  <div class="max-w-6xl w-full flex flex-col items-center gap-16">
-    <h1
-      class="text-center text-3xl md:text-5xl mt-5 font-bold tracking-tight text-white opacity-0 animate-[fadeUp_0.8s_ease-out_forwards]"
-    >
-      {Apod?.title}
-    </h1>
-    <figure
-      class="w-full flex justify-center opacity-0 animate-[fadeUp_0.9s_ease-out_0.15s_forwards]"
-    >
-      <img
-        loading="eager"
-        src={Apod?.url || "https://astro.build/assets/press/astro-logo-light-gradient.png"}
-        alt={Apod?.title || ""}
-        class="w-full md:w-4/5 rounded-2xl ring-1 ring-white/10 shadow-[0_40px_160px_rgba(255,255,255,0.08)] transition-transform duration-700 ease-out hover:scale-[1.015]"
-      />
-    </figure>
+  <div class="fixed inset-0 overflow-hidden pointer-events-none">
     <div
-      class="w-20 h-px bg-white/15 opacity-0 animate-[fadeUp_0.6s_ease-out_0.3s_forwards]"
+      class="absolute -top-[25%] -left-[10%] w-[70%] h-[70%] bg-zinc-500/10 blur-[120px] rounded-full"
     >
     </div>
-    <article
-      class="max-w-[68ch] md:max-w-5/7 md:text-lg leading-relaxed text-zinc-400 flex flex-col items-center gap-4 opacity-0 animate-[fadeUp_0.8s_ease-out_0.45s_forwards]"
+    <div
+      class="absolute top-[20%] -right-[10%] w-[60%] h-[60%] bg-zinc-500/5 blur-[120px] rounded-full"
     >
-      <p class="text-justify md:text-left">
-        {Apod?.explanation}
-      </p>
-      <p class="text-shadow-zinc-500 mt-2 text-center">
-        &copy; {Apod?.copyright || "NASA"}
-      </p>
-    </article>
+    </div>
+  </div>
+
+  <div class="relative max-w-7xl mx-auto px-6 pt-32 pb-24">
+    <div class="flex flex-col items-center">
+      <header
+        class="flex flex-col items-center mb-12 animate-in fade-in slide-in-from-bottom-4 duration-1000"
+      >
+        <div class="flex items-center gap-3 mb-6">
+          <span class="h-px w-8 bg-white/20"></span>
+          <span
+            class="text-[11px] font-bold tracking-[0.3em] uppercase text-zinc-500"
+          >
+            {Apod?.date}
+          </span>
+          <span class="h-px w-8 bg-white/20"></span>
+        </div>
+
+        <h1
+          class="font-sans text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight text-white text-center leading-[1.1] max-w-4xl"
+        >
+          {Apod?.title}
+        </h1>
+      </header>
+
+      <figure
+        class="w-full relative group mb-24 animate-in fade-in zoom-in-95 duration-1000 delay-200"
+      >
+        <div
+          class="absolute inset-0 bg-white/5 blur-3xl rounded-2xl opacity-20 group-hover:opacity-30 transition-opacity"
+        >
+        </div>
+        <Image
+          width={1200}
+          loading="eager"
+          src={Apod?.hdurl ||
+            "https://astro.build/assets/press/astro-logo-light-gradient.png"}
+          alt={Apod?.title || "NASA"}
+          class="relative w-full object-cover rounded-3xl md:rounded-[2.5rem] border border-white/10 shadow-2xl shadow-black"
+        />
+
+        <div
+          class="absolute md:bottom-6 md:right-8 bottom-3 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-500 md:block"
+        >
+          <p
+            class="text-[10px] tracking-widest uppercase text-white/50 bg-black/40 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10"
+          >
+            &copy; {Apod?.copyright || "NASA"}
+          </p>
+        </div>
+      </figure>
+
+      <div
+        class="grid grid-cols-1 lg:grid-cols-[1fr_2px_1fr] gap-12 lg:gap-20 items-start max-w-5xl"
+      >
+        <article class="prose prose-invert prose-zinc lg:prose-lg">
+          <h2 class="text-white font-medium text-lg mb-4 tracking-tight">
+            Explanation
+          </h2>
+          <p class="text-zinc-400 leading-relaxed text-balance">
+            {Apod?.explanation}
+          </p>
+        </article>
+
+        <div
+          class="hidden lg:block self-stretch bg-linear-to-b from-transparent via-white/10 to-transparent"
+        >
+        </div>
+
+        <aside class="flex flex-col gap-8 lg:sticky lg:top-32">
+          <div
+            class="p-6 rounded-2xl border border-white/5 bg-white/2 backdrop-blur-sm"
+          >
+            <h3
+              class="text-xs font-bold uppercase tracking-widest text-zinc-400 mb-4"
+            >
+              Metadata
+            </h3>
+            <div class="space-y-4">
+              <div
+                class="flex justify-between items-center border-b border-white/5 pb-3"
+              >
+                <span class="text-sm text-zinc-500">Source</span>
+                <span class="text-sm text-zinc-200">NASA APOD</span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-sm text-zinc-500">Credit</span>
+                <span class="text-sm text-zinc-200"
+                  >{Apod?.copyright || "Public Domain"}</span
+                >
+              </div>
+            </div>
+          </div>
+
+          <a
+            href="/archive"
+            class="group flex items-center justify-center gap-2 py-4 rounded-2xl bg-white text-black font-semibold text-sm transition-transform active:scale-95 hover:bg-zinc-200"
+          >
+            Browse Archive
+            <svg
+              class="group-hover:translate-x-2 transition-transform duration-200"
+              data-testid="geist-icon"
+              height="16"
+              stroke-linejoin="round"
+              style="color: currentcolor;"
+              viewBox="0 0 16 16"
+              width="16"
+              ><path
+                fill-rule="evenodd"
+                clip-rule="evenodd"
+                d="M9.53033 2.21968L9 1.68935L7.93934 2.75001L8.46967 3.28034L12.4393 7.25001H1.75H1V8.75001H1.75H12.4393L8.46967 12.7197L7.93934 13.25L9 14.3107L9.53033 13.7803L14.6036 8.70711C14.9941 8.31659 14.9941 7.68342 14.6036 7.2929L9.53033 2.21968Z"
+                fill="currentColor"></path></svg
+            >
+          </a>
+        </aside>
+      </div>
+    </div>
   </div>
 </div>
+
+<style>
+  .animate-in {
+    animation-fill-mode: forwards;
+  }
+</style>
