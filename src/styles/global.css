@@ -32,3 +32,16 @@
     background-position: -200% 0;
   }
 }
+
+.animate-in {
+  animation-fill-mode: forwards;
+}
+
+.scrollbar-hidden::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hidden {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

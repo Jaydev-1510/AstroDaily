@@ -4,6 +4,7 @@ import Layout from "@layouts/base.astro";
 import ApodCard from "@components/apodCard.astro";
 
 export const prerender = false;
+export const revalidate = 86400;
 
 const { year, month, day } = Astro.params;
 const formattedDate = `${year}-${month?.padStart(2, "0")}-${day?.padStart(2, "0")}`;

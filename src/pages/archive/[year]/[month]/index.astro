@@ -17,7 +17,7 @@ const endDate = `${year}-${paddedMonth}-${lastDay}`;
 
 const { data: days, error } = await database
   .from("APODs")
-  .select("date, title, url")
+  .select("*")
   .gte("date", startDate)
   .lte("date", endDate)
   .order("date", { ascending: true });
@@ -30,25 +30,25 @@ const monthShort = dateObj.toLocaleString("default", { month: "short" });
 <Layout title={`${monthName} ${year} | Archive`}>
   <main class="relative min-h-screen pt-32 pb-20 px-6 max-w-7xl mx-auto">
     <header class="mb-20 text-center">
-    <h1
-      class="font-sans font-bold text-9xl md:text-[12rem] tracking-tighter absolute left-1/2 -translate-x-1/2 top-20 select-none text-center bg-linear-0 from-black to-zinc-500 text-transparent bg-clip-text duration-700 hover:to-zinc-200 transition-colors"
-    >
-      {year}
-    </h1>
-    <h2
-      class="relative text-4xl md:text-6xl text-shadow-black font-bold text-zinc-300 tracking-tight mt-10 font-sans hover:tracking-normal duration-500"
-    >
-      {monthName} Snapshot
-    </h2>
-    <div class="h-1 w-1/2 border-b  border-zinc-500 mx-auto mt-6"></div>
-  </header>
+      <h1
+        class="font-sans font-bold text-9xl md:text-[12rem] tracking-tighter absolute left-1/2 -translate-x-1/2 top-20 select-none text-center bg-linear-0 from-black to-zinc-500 text-transparent bg-clip-text duration-700 hover:to-zinc-200 transition-colors"
+      >
+        {year}
+      </h1>
+      <h2
+        class="relative text-4xl md:text-6xl text-shadow-black font-bold text-zinc-300 tracking-tight mt-10 font-sans hover:tracking-normal duration-500"
+      >
+        {monthName} Snapshot
+      </h2>
+      <div class="h-1 w-1/2 border-b border-zinc-500 mx-auto mt-6"></div>
+    </header>
 
     <div class="relative z-10">
       {
         days && days.length > 0 ? (
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-10 place-items-center">
             {days.map((item) => (
-              <ApodCard Apod={item} date={item.date} />
+              <ApodCard Apod={item} />
             ))}
           </div>
         ) : (

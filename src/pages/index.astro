@@ -1,29 +1,99 @@
 ---
 import Layout from "@layouts/base.astro";
+import ApodCard from "@components/preApodCard.astro";
+import { database } from "@lib/database";
+
+export const prerender = false;
+const { data, error } = await database
+  .from("APODs")
+  .select("*")
+  .order("date", { ascending: false })
+  .limit(1)
+  .single();
+
+const month = Number(data?.date.split("-")[1]);
+const day = Number(data?.date.split("-")[2]);
+
+const { data: anniversaries } = await database.rpc("get_apods_by_date", {
+  m: month,
+  d: day,
+});
+
+anniversaries?.pop();
 ---
 
 <Layout>
-  <div class="flex flex-col justify-center items-center h-screen">
+  <section
+    class="flex flex-col justify-center items-center h-dvh w-screen border-b border-zinc-700"
+  >
     <h1
-      class="relative text-center gradient-text text-transparent bg-clip-text font-bold md:text-9xl text-7xl mt-5"
+      class="font-sans font-bold text-7xl md:text-[12rem] tracking-tighter top-20 select-none text-center bg-linear-0 from-black to-zinc-200 text-transparent bg-clip-text hover:tracking-normal duration-700"
     >
       astroDaily
     </h1>
-    <div class="relative flex flex-col items-center justify-center mt-10">
-      <a
-        class="hover:text-white text-zinc-300 transition-colors duration-300 decoration hover:decoration-wavy underline"
-        href="./apod">Astronomy Picture of the Day</a
+    <p class="text-center text-zinc-400 leading-relaxed text-balance">
+      An archive + gallery of NASA's astronomy picture of the day.
+    </p>
+    <div
+      class="absolute w-full flex flex-row bottom-5 items-center justify-center"
+    >
+      <svg
+        data-testid="geist-icon"
+        height="48"
+        stroke-linejoin="round"
+        style="color:currentColor"
+        viewBox="0 0 48 48"
+        width="48"
+        ><path
+          fill-rule="evenodd"
+          clip-rule="evenodd"
+          d="M4.53032 2.96966L3.99999 2.43933L2.93933 3.49999L3.46966 4.03032L7.29289 7.85355C7.68341 8.24407 8.31658 8.24407 8.7071 7.85354L12.5303 4.03032L13.0607 3.49999L12 2.43933L11.4697 2.96966L7.99999 6.43933L4.53032 2.96966ZM4.53032 7.96966L3.99999 7.43933L2.93933 8.49999L3.46966 9.03032L7.29289 12.8535C7.68341 13.2441 8.31658 13.2441 8.7071 12.8535L12.5303 9.03032L13.0607 8.49999L12 7.43933L11.4697 7.96966L7.99999 11.4393L4.53032 7.96966Z"
+          fill="currentColor"></path></svg
       >
     </div>
-  </div>
+  </section>
+  <section class="scroll-my-32 py-20 border-b border-zinc-700 w-full">
+    <div
+      class="w-full flex items-baseline justify-center gap-4 mb-10 border-b border-white/5 pb-4"
+    >
+      <h3
+        class="text-3xl md:text-4xl lg:text-5xl font-bold text-zinc-200 tracking-tight text-center w-full"
+      >
+        Astronomy Picture of the Day
+      </h3>
+    </div>
+
+    <div class="flex items-center justify-center">
+      <ApodCard Apod={data} />
+    </div>
+  </section>
+  <section class="scroll-my-32 py-20 border-b border-zinc-700 w-full">
+    <div
+      class="w-full flex items-baseline justify-center gap-4 mb-10 border-b border-white/5 pb-4"
+    >
+      <h3
+        class="text-3xl md:text-4xl lg:text-5xl font-bold text-zinc-200 tracking-tight text-center w-full"
+      >
+        Pictures from past on this day.
+      </h3>
+    </div>
+  
+    <div class="flex items-center justify-center">
+      {
+        anniversaries && anniversaries.length > 0 ? (
+          <div class="px-20 flex flex-row gap-6 items-center overflow-x-auto scrollbar-hidden snap-x snap-mandatory scroll-smooth">
+            {anniversaries.map((item) => (
+              <ApodCard Apod={item} classList="snap-center snap-always" />
+            ))}
+          </div>
+        ) : (
+          <div class="flex flex-col items-center justify-center py-40 border border-dashed border-white/10 rounded-3xl">
+            <p class="text-sm tracking-widest uppercase text-zinc-600">
+              No cosmic data found for this period
+            </p>
+          </div>
+        )
+      }
+    </div>
+  </section>
 </Layout>
-<style>
-  .gradient-text {
-    background: linear-gradient(0deg, #000, #fff);
-    background-size: 300% 100%;
-    background-clip: text;
-    -webkit-background-clip: text;
-    color: transparent;
-    -webkit-text-fill-color: transparent;
-  }
-</style>
