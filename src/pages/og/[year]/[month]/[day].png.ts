@@ -61,7 +61,7 @@ export async function GET({ params }) {
                 {
                   type: "div",
                   props: {
-                    children: "COSMIC ARCHIVE",
+                    children: "astroDaily",
                     style: {
                       fontSize: 30,
                       color: "white",

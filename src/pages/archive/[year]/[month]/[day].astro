@@ -26,6 +26,6 @@ Astro.response.headers.set(
 const ogImage = `https://astro--daily.vercel.app/og/${year}/${month}/${day}.png`;
 ---
 
-<Layout ogImage={ogImage}>
+<Layout title={`Archive - ${formattedDate} | astroDaily`} ogImage={ogImage}>
   <ApodCard Apod={data} />
 </Layout>

@@ -57,9 +57,10 @@ anniversaries?.pop()
         >
         </div>
         <Image
-          width={1200}
+          width={500}
+          height={800}
           loading="eager"
-          src={Apod?.hdurl ||
+          src={Apod?.url ||
             "https://astro.build/assets/press/astro-logo-light-gradient.png"}
           alt={Apod?.title || "NASA"}
           class="relative w-full object-cover rounded-3xl md:rounded-[2.5rem] border border-white/10 shadow-2xl shadow-black"
