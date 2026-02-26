@@ -3,7 +3,7 @@ name: Daily Sync Database
 on:
   workflow_dispatch:
   schedule:
-    - cron: "5 30 * * *"
+    - cron: "6 0 * * *"
 
 jobs:
   sync:
