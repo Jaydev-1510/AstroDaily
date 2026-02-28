@@ -2,6 +2,8 @@
 import Layout from "@layouts/base.astro";
 import { database } from "@lib/database";
 
+export const prerender = false;
+
 const { data: rawItems } = await database
   .from("APODs")
   .select("date, title, url, hdurl")
