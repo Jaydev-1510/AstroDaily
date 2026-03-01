@@ -14,93 +14,52 @@ const { data: anniversaries } = await database.rpc("get_apods_by_date", {
 });
 
 anniversaries?.pop();
+
+const shareUrl = Astro.url.toString();
+const shareTitle = "Check out this amazing Astronomy Picture";
+const shareMessage = encodeURIComponent(`${shareUrl}\nCheck out this amazing Astronomy Picture of the Day - ${Apod?.date}: ${Apod?.title}`);
 ---
 
 <main class="relative min-h-screen bg-black text-zinc-300">
+  
+  <!-- Decoration -->
   <div class="fixed inset-0 overflow-hidden pointer-events-none">
-    <div
-      class="absolute -top-[25%] -left-[10%] w-[70%] h-[70%] bg-zinc-500/10 blur-[120px] rounded-full"
-    >
-    </div>
-    <div
-      class="absolute top-[20%] -right-[10%] w-[60%] h-[60%] bg-zinc-500/5 blur-[120px] rounded-full"
-    >
-    </div>
+    <div class="absolute -top-[25%] -left-[10%] w-[70%] h-[70%] bg-zinc-500/10 blur-[120px] rounded-full" ></div>
+    <div class="absolute top-[20%] -right-[10%] w-[60%] h-[60%] bg-zinc-500/5 blur-[120px] rounded-full" ></div>
   </div>
 
   <div class="relative max-w-7xl mx-auto px-6 pb-24">
     <div class="flex flex-col items-center">
-      <header
-        class="flex flex-col items-center mb-12 animate-in fade-in slide-in-from-bottom-4 duration-1000"
-      >
+      <section class="flex flex-col items-center mb-12 animate-in fade-in slide-in-from-bottom-4 duration-1000" >
+
         <div class="flex items-center gap-3 mb-6">
           <span class="h-px w-8 bg-white/20"></span>
-          <span
-            class="text-[11px] font-bold tracking-[0.3em] uppercase text-zinc-500"
-          >
+          <span class="text-[11px] font-bold tracking-[0.3em] uppercase text-zinc-500" >
             {Apod?.date}
           </span>
           <span class="h-px w-8 bg-white/20"></span>
         </div>
 
-        <h1
-          class="font-sans text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight text-white text-center leading-[1.1] max-w-4xl"
-        >
+        <h1 class="font-sans text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight text-white text-center leading-[1.1] max-w-4xl" >
           {Apod?.title}
         </h1>
-      </header>
 
-      <figure
-        class="w-full relative group mb-24 animate-in fade-in zoom-in-95 duration-1000 delay-200"
-      >
-        <div
-          class="absolute inset-0 bg-white/5 blur-3xl rounded-2xl opacity-20 group-hover:opacity-30 transition-opacity"
-        >
-        </div>
-        <Image
-          width={500}
-          height={800}
-          loading="eager"
-          src={Apod?.url ||
-            "https://astro.build/assets/press/astro-logo-light-gradient.png"}
-          alt={Apod?.title || "NASA"}
-          class="relative w-full object-cover rounded-3xl md:rounded-[2.5rem] border border-white/10 shadow-2xl shadow-black"
-        />
+      </section>
 
-        <div
-          class="absolute md:bottom-6 md:right-8 bottom-3 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex gap-1"
-        >
-          <p
-            class="text-[10px] text-right tracking-widest uppercase text-white/50 bg-black/40 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10"
-          >
+      <figure class="w-full relative group mb-24 animate-in fade-in zoom-in-95 duration-1000 delay-200" >
+        <div class="absolute inset-0 bg-white/5 blur-3xl rounded-2xl opacity-20 group-hover:opacity-30 transition-opacity" ></div>
+        <Image width={500} height={800} loading="eager" src={Apod?.url || "https://astro.build/assets/press/astro-logo-light-gradient.png"} alt={`${Apod?.title} (${Apod?.url})` || "NASA"} class="relative w-full object-cover rounded-3xl md:rounded-[2.5rem] border border-white/10 shadow-2xl shadow-black" />
+        <div class="absolute md:bottom-6 md:right-8 bottom-3 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex gap-1" >
+          <p class="text-[10px] text-right tracking-widest uppercase text-white/50 bg-black/40 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10" >
             &copy; {Apod?.copyright || "NASA"}
           </p>
-          <a
-            href={Apod?.hdurl}
-            download={Apod?.title}
-            target="_blank"
-            class="text-[10px] w-12.5 tracking-widest uppercase text-white/50 bg-black/40 backdrop-blur-md flex items-center justify-center rounded-full border border-white/10"
-          >
-            <svg
-              data-testid="geist-icon"
-              height="16"
-              stroke-linejoin="round"
-              style="color:currentColor"
-              viewBox="0 0 16 16"
-              width="16"
-              ><path
-                fill-rule="evenodd"
-                clip-rule="evenodd"
-                d="M8.75 1V1.75V8.68934L10.7197 6.71967L11.25 6.18934L12.3107 7.25L11.7803 7.78033L8.70711 10.8536C8.31658 11.2441 7.68342 11.2441 7.29289 10.8536L4.21967 7.78033L3.68934 7.25L4.75 6.18934L5.28033 6.71967L7.25 8.68934V1.75V1H8.75ZM13.5 9.25V13.5H2.5V9.25V8.5H1V9.25V14C1 14.5523 1.44771 15 2 15H14C14.5523 15 15 14.5523 15 14V9.25V8.5H13.5V9.25Z"
-                fill="currentColor"></path></svg
-            >
+          <a href={Apod?.hdurl} download={Apod?.title} target="_blank" class="text-[10px] w-12.5 tracking-widest uppercase text-white/50 bg-black/40 backdrop-blur-md flex items-center justify-center rounded-full border border-white/10" >
+            <Icon glyph="download" />
           </a>
         </div>
       </figure>
 
-      <div
-        class="grid grid-cols-1 lg:grid-cols-[1fr_2px_1fr] gap-12 lg:gap-20 items-start max-w-5xl"
-      >
+      <section class="grid grid-cols-1 lg:grid-cols-[1fr_2px_1fr] gap-12 lg:gap-20 items-start max-w-5xl" >
         <article class="prose prose-invert prose-zinc lg:prose-lg">
           <h2 class="text-white font-medium text-lg mb-4 tracking-tight">
             Explanation
@@ -110,109 +69,93 @@ anniversaries?.pop();
           </p>
         </article>
 
-        <div
-          class="hidden lg:block self-stretch bg-linear-to-b from-transparent via-white/10 to-transparent"
-        >
-        </div>
+        <div class="hidden lg:block self-stretch bg-linear-to-b from-transparent via-white/10 to-transparent" ></div>
 
         <aside class="flex flex-col gap-8 lg:sticky lg:top-32">
-          <div
-            class="p-6 rounded-2xl border border-white/5 bg-white/2 backdrop-blur-sm"
-          >
-            <h3
-              class="text-xs font-bold uppercase tracking-widest text-zinc-400 mb-4"
-            >
+          <div class="p-6 rounded-2xl border border-white/5 bg-white/2 backdrop-blur-sm" >
+            <h3 class="text-xs font-bold uppercase tracking-widest text-zinc-400 mb-4" >
               Metadata
             </h3>
             <div class="space-y-4">
-              <div
-                class="flex justify-between items-center border-b border-white/5 pb-3"
-              >
+              <div class="flex justify-between items-center border-b border-white/5 pb-3" >
                 <span class="text-sm text-zinc-500">Source</span>
                 <span class="text-sm text-zinc-200 text-right">NASA APOD</span>
               </div>
               <div class="flex justify-between items-center">
-                <span class="text-sm text-zinc-500">Credit</span>
-                <span class="text-sm text-zinc-200 text-right"
-                  >{Apod?.copyright || "Public Domain"}</span
-                >
+                <span class="text-sm text-zinc-500">
+                  Credit
+                </span>
+                <span class="text-sm text-zinc-200 text-right">
+                  {Apod?.copyright || "Public Domain"}
+                </span>
               </div>
             </div>
           </div>
-          <div
-            class="p-6 rounded-2xl border border-white/5 bg-white/2 backdrop-blur-sm"
-          >
-            <h3
-              class="text-xs font-bold uppercase tracking-widest text-zinc-400 mb-4"
-            >
+          <div class="p-6 rounded-2xl border border-white/5 bg-white/2 backdrop-blur-sm" >
+            <h3 class="text-xs font-bold uppercase tracking-widest text-zinc-400 mb-4" >
               Share
             </h3>
             <p class="flex flex-row gap-7 items-center justify-between px-7">
 
-              <button onclick="window.open('https://wa.me/?text=Hello','_blank')" class="hover:scale-120 transition-transform duration-500" >
+              <button onclick={`window.open('https://wa.me/?text=${shareMessage}', '_blank')`} class="hover:scale-120 transition-transform duration-500 cursor-pointer" >
                 <Icon glyph="logo-whats-app"/>
               </button>
 
-              <button onclick="" class="hover:scale-120 transition-transform duration-500" >
+              <button onclick={`window.open('https://www.facebook.com/sharer/sharer.php?u=${Astro.url}', '_blank')`} class="hover:scale-120 transition-transform duration-500 cursor-pointer" >
                 <Icon glyph="logo-facebook" />
               </button>
 
-              <button onclick="" class="hover:scale-120 transition-transform duration-500" >
+              <button onclick={`window.open('https://x.com/intent/tweet?text=${shareMessage}', '_blank')`} class="hover:scale-120 transition-transform duration-500 cursor-pointer" >
                 <Icon glyph="logo-twitter-x" />
               </button>
 
-              <button onclick="" class="hover:scale-120 transition-transform duration-500" >
+              <button onclick={`window.open('https://www.reddit.com/submit?url=${encodeURIComponent(shareUrl)}&title=${encodeURIComponent(shareTitle)}','_blank')`}} class="hover:scale-120 transition-transform duration-500 cursor-pointer" >
                 <Icon glyph="logo-reddit" />
               </button>
 
-              <button onclick="" class="hover:scale-120 transition-transform duration-500" >
-                <Icon glyph="logo-slack-color" />
+              <button onclick={`window.open('https://www.linkedin.com/sharing/share-offsite/?url=${shareUrl}', '_blank')`} class="hover:scale-120 transition-transform duration-500 cursor-pointer" >
+                <Icon glyph="linkedin" />
               </button>
 
-              <button onclick="" class="hover:scale-120 transition-transform duration-500" >
-                <Icon glyph="logo-discord" />
+              <button onclick={`navigator.clipboard.writeText('${shareUrl}'); this.classList.add('text-green-500'); setTimeout(() => this.classList.remove('text-green-500'), 2000);`} class="hover:scale-120 transition-all duration-500 cursor-pointer" >
+                <Icon glyph="copy" />
               </button>
 
             </p>
           </div>
-          <a
-            href="/archive"
-            class="group flex items-center justify-center gap-2 py-4 rounded-2xl bg-white text-black font-semibold text-sm transition-transform active:scale-95 hover:bg-zinc-200"
-          >
+          <a href="/archive" class="group flex items-center justify-center gap-2 py-4 rounded-2xl bg-white text-black font-semibold text-sm transition-transform active:scale-95 hover:bg-zinc-200" >
             Browse Archive
-            <Icon glyph="arrow-right" />
+            <Icon glyph="arrow-right" class="group-hover:translate-x-2 transition-transform duration-200" />
           </a>
         </aside>
-      </div>
+      </section>
     </div>
   </div>
+  
+  <!-- anniversary section -->
+  <section class="py-20 border-b border-zinc-700 w-full">
+    <div class="w-full flex items-baseline justify-center gap-4 mb-10 border-b border-white/5 pb-4" >
+      <h3 class="text-3xl md:text-4xl lg:text-5xl font-bold text-zinc-200 tracking-tight text-center w-full" >
+        Pictures from past on this day.
+      </h3>
+    </div>
+  
+    <div class="flex items-center justify-center">
+      {
+        anniversaries && anniversaries.length > 0 ? (
+          <div class="px-20 flex flex-row gap-6 items-center overflow-x-auto scrollbar-hidden snap-x snap-mandatory scroll-smooth">
+            {anniversaries.map((item) => (
+              <PreApodCard Apod={item} classList="snap-center snap-always" />
+            ))}
+          </div>
+        ) : (
+          <div class="flex flex-col items-center justify-center py-40 border border-dashed border-white/10 rounded-3xl">
+            <p class="text-sm tracking-widest uppercase text-zinc-600">
+              No cosmic data found for this period
+            </p>
+          </div>
+        )
+      }
+    </div>
+  </section>
 </main>
-<section class="scroll-my-32 py-20 border-b border-zinc-700 w-full">
-  <div
-    class="w-full flex items-baseline justify-center gap-4 mb-10 border-b border-white/5 pb-4"
-  >
-    <h3
-      class="text-3xl md:text-4xl lg:text-5xl font-bold text-zinc-200 tracking-tight text-center w-full"
-    >
-      Pictures from past on this day.
-    </h3>
-  </div>
-
-  <div class="flex items-center justify-center">
-    {
-      anniversaries && anniversaries.length > 0 ? (
-        <div class="px-20 flex flex-row gap-6 items-center overflow-x-auto scrollbar-hidden snap-x snap-mandatory scroll-smooth">
-          {anniversaries.map((item) => (
-            <PreApodCard Apod={item} classList="snap-center snap-always" />
-          ))}
-        </div>
-      ) : (
-        <div class="flex flex-col items-center justify-center py-40 border border-dashed border-white/10 rounded-3xl">
-          <p class="text-sm tracking-widest uppercase text-zinc-600">
-            No cosmic data found for this period
-          </p>
-        </div>
-      )
-    }
-  </div>
-</section>

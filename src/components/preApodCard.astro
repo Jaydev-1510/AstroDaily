@@ -1,4 +1,5 @@
 ---
+import Icon from "./icons.astro";
 import { Image } from "astro:assets";
 
 const { Apod, classList } = Astro.props;
@@ -8,72 +9,33 @@ const month = date.split("-")[1];
 const day = date.split("-")[2];
 ---
 
-<a
-  title="Read more..."
-  href={`/archive/${year}/${month}/${day}`}
-  class=`group relative lg:w-full md:full w-9/10 max-w-125 min-w-80 md:min-w-90 overflow-hidden rounded-2xl border border-white/10 bg-white/3 transition-all duration-500 ease-out hover:border-white/20 hover:bg-white/6 hover:shadow-[0_20px_50px_rgba(0,0,0,0.5)] ${classList}`
->
-  <div
-    class="group relative w-full overflow-hidden border border-white/10 bg-white/2"
-  >
+<a title="Read more..." href={`/archive/${year}/${month}/${day}`} class={`group relative lg:w-full md:full w-9/10 max-w-125 min-w-80 md:min-w-90 overflow-hidden rounded-2xl border border-white/10 bg-white/3 transition-all duration-500 ease-out hover:border-white/20 hover:bg-white/6 hover:shadow-[0_20px_50px_rgba(0,0,0,0.5)] ${classList}`} >
+  <div class="group relative w-full overflow-hidden border border-white/10 bg-white/2" >
+    
     <div class="relative overflow-hidden aspect-video bg-white/5">
       <div class="absolute inset-0 animate-shimmer z-0">
-        <div
-          class="z-20 absolute bottom-3 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-500 md:block"
-        >
-          <p
-            class="text-[10px] tracking-widest uppercase text-white/50 bg-black/40 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10"
-          >
+        <div class="z-20 absolute bottom-3 px-3 opacity-0 group-hover:opacity-100 transition-opacity duration-500 md:block">
+          <p class="right-0 text-[10px] tracking-widest uppercase text-white/50 bg-black/40 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10 line-clamp-1" >
             &copy; {Apod?.copyright || "NASA"}
           </p>
         </div>
-
-        <Image
-          loading="lazy"
-          width={500}
-          height={281}
-          class="relative z-10 h-full w-full object-cover opacity-0 transition-opacity duration-700 ease-in-out"
-          src={Apod?.url}
-          alt={Apod?.title}
-          onload="this.classList.remove('opacity-0')"
-        />
+        <Image loading="lazy" width={500} height={281} class="relative z-10 h-full w-full object-cover opacity-0 transition-opacity duration-700 ease-in-out" src={Apod?.url || ""} alt={Apod?.title} onload="this.classList.remove('opacity-0')" />
       </div>
     </div>
 
     <div class="p-5 flex flex-row items-center">
       <div class="flex flex-col gap-1 min-w-[95%]">
-        <span
-          class="text-[10px] font-semibold uppercase tracking-[0.2em] text-white/40"
-        >
+        <span class="text-[10px] font-semibold uppercase tracking-[0.2em] text-white/40" >
           {Apod?.date}
         </span>
-        <h1
-          class="font-sans text-xl font-medium tracking-tight text-white/90 line-clamp-1"
-        >
+        <h1 class="font-sans text-xl font-medium tracking-tight text-white/90 line-clamp-1" >
           {Apod?.title || "Untitled Cosmic Event"}
         </h1>
       </div>
-      <div
-        class="h-full group-hover:flex items-center justify-center transition-transform duration-200 ease-out scale-0 group-hover:scale-105 -translate-x-3 group-hover:translate-x-0"
-      >
-        <svg
-          data-testid="geist-icon"
-          height="16"
-          stroke-linejoin="round"
-          style="color:currentColor"
-          viewBox="0 0 16 16"
-          width="16"
-          ><path
-            fill-rule="evenodd"
-            clip-rule="evenodd"
-            d="M5.50001 1.93933L6.03034 2.46966L10.8536 7.29288C11.2441 7.68341 11.2441 8.31657 10.8536 8.7071L6.03034 13.5303L5.50001 14.0607L4.43935 13L4.96968 12.4697L9.43935 7.99999L4.96968 3.53032L4.43935 2.99999L5.50001 1.93933Z"
-            fill="currentColor"></path></svg
-        >
-      </div>
+      <Icon glyph="chevron-right" class="transition-transform duration-200 ease-out scale-0 group-hover:scale-105 -translate-x-3 group-hover:translate-x-0" />
     </div>
-    <div
-      class="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100 bg-linear-to-tr from-white/5 to-transparent"
-    >
-    </div>
+    
+    <div class="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100 bg-linear-to-tr from-white/5 to-transparent" ></div>
+  
   </div>
 </a>
