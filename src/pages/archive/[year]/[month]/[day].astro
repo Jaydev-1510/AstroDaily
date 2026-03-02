@@ -19,6 +19,7 @@ if (error || !data) {
 }
 
 const ogUrl = `https://astro--daily.vercel.app/api/og/${formattedDate}`;
+console.log(ogUrl)
 
 Astro.response.headers.set(
   "Cache-Control",
