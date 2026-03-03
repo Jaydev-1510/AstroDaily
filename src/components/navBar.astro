@@ -21,37 +21,33 @@ const latestApod = await fetch(
 const latestDate: string = latestApod.date;
 ---
 
-<header class="fixed top-0 w-screen z-50 flex justify-center pt-6 px-4 bg-linear-to-b from-black to-transparent">
-  <nav class="flex h-14 w-full max-w-5xl px-3 items-center justify-between rounded-2xl border border-white/10 bg-black/40 backdrop-blur-xl transition-all duration-500 hover:border-white/20 hover:bg-black/60 shadow-[0_20px_50px_rgba(0,0,0,0.3)]">
+<header class="fixed top-0 w-screen z-50 flex justify-center pt-6 px-4 bg-linear-to-b from-black to-transparent supports-backdrop-filter:from-black/60">
+  <nav class="flex h-14 w-full max-w-5xl px-3 items-center justify-between rounded-3xl border border-white/10 bg-black/40 backdrop-blur-xl transition-all duration-500 hover:border-white/20 hover:bg-black/60 shadow-[0_20px_50px_rgba(0,0,0,0.3)]" aria-label="Primary navigation" >
 
-    <div class="flex items-center">
-      <a title="Home" href="/" class="group flex items-center gap-3">
-        <img src="/star.svg" alt="Logo" class="object-contain h-8 w-8 transition-transform duration-700 group-hover:rotate-360" />
+      <a href="/" title="Home - astroDaily" class="group flex items-center gap-3" aria-label="astroDaily homepage">
+        <img src="/favicon.svg" alt="astroDaily logo" class="object-contain h-8 w-8 transition-transform duration-700 group-hover:rotate-360" />
         <span class="hidden md:block font-sans text-xs font-bold uppercase tracking-[0.3em] text-white/90">
           astroDaily
         </span>
       </a>
-    </div>
 
-    <div class="flex items-center">
       <ul class="flex items-center gap-6">
-        {navList.map(([label, href, title]) => (
+        {navList.map(([label, href, title]) => {
+            const isActive = Astro.url.pathname === href;
+            return (
             <li class="relative group">
-              <a title={title} href={href} class="font-sans text-[11px] font-bold uppercase tracking-widest text-zinc-400 transition-colors duration-300 hover:text-white">
+              <a href={href} aria-current={isActive ? "page" : undefined} title={title} class={`font-sans text-[11px] font-bold uppercase tracking-widest transition-colors duration-300 ${isActive ? "text-white" : "text-zinc-400 hover:text-white"}`}>
                 {label}
               </a>
-              <span class="absolute -bottom-1 left-0 h-px w-0 bg-zinc-500 transition-all duration-300 group-hover:w-full" />
+              <span class={`absolute left-0 h-px bg-zinc-500 transition-all duration-300 ${isActive ? "w-full" : "w-0 group-hover:w-full"}`} />
             </li>
-          ))
-        }
+            );
+        })}
       </ul>
-    </div>
 
-    <div class="hidden lg:flex items-center">
-      <span class="text-[10px] font-mono text-zinc-400/80 bg-zinc-500/10 px-2 py-1 rounded-4xl border border-zinc-500/20">
+      <span class="hidden md:inline-block text-[10px] font-mono text-zinc-400/80 bg-zinc-500/10 px-2 py-1 rounded-4xl border border-zinc-500/20">
         {lastDate === latestDate ? "LIVE_DATA" : "OLD_DATA"}
       </span>
-    </div>
 
   </nav>
 </header>
