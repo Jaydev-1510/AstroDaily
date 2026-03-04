@@ -3,7 +3,6 @@ import { database } from "@lib/database";
 import Layout from "@layouts/base.astro";
 import ApodCard from "@components/apodCard.astro";
 
-export const prerender = false;
 export const revalidate = 86400;
 
 const { year, month, day } = Astro.params;
@@ -19,7 +18,6 @@ if (error || !data) {
 }
 
 const ogUrl = `https://astro--daily.vercel.app/api/og/${formattedDate}.png`;
-console.log(ogUrl)
 
 Astro.response.headers.set(
   "Cache-Control",
