@@ -20,7 +20,7 @@ const { data: anniversaries } = await database.rpc("get_apods_by_date", {
 anniversaries?.pop();
 ---
 
-<section id="history" aria-labelledby="history-heading" class="w-full py-24 md:px-6 md:py-32 flex flex-col gap-12 justify-center" >
+<section id="history" aria-labelledby="history-heading" class="w-full py-24 md:py-32 flex flex-col gap-12 justify-center" >
   <header class="flex flex-col items-center text-center gap-4">
     <p class="text-xs font-semibold uppercase tracking-[0.3em] text-zinc-500">
       Time Travel
@@ -31,7 +31,7 @@ anniversaries?.pop();
   </header>
 
   {anniversaries && anniversaries.length > 0 ? (
-    <div class="flex flex-row gap-6 md:gap-10 items-center overflow-x-auto scrollbar-hidden snap-x snap-mandatory scroll-smooth">
+    <div class="flex flex-row gap-6 md:gap-10 items-center overflow-x-auto scrollbar-hidden snap-x snap-mandatory scroll-smooth px-6">
       {anniversaries.map((item) => (
         <ApodCard Apod={item} classList="snap-center snap-always" />
       ))}

@@ -1,25 +1,28 @@
 ---
 import { Image } from "astro:assets";
-import { database } from "@lib/database";
 import Icon from "./icons.astro";
 
-const { data: galleryItems } = await database
-  .from("APODs")
-  .select("date, title, url, hdurl")
-  .order("date", { ascending: false })
-  .limit(12);
+interface APODItem {
+  date: string;
+  title: string;
+  url: string;
+  hdurl?: string | null;
+}
+
+const res = await fetch(`http://localhost:4321/api/gallery.json?page=${1}`);
+const { data:galleryItems} = await res.json();
 ---
 
-<section id="gallery-preview" aria-labelledby="gallery-heading" class="w-full px-6 py-24 md:py-32 hidden md:block" >
-  <div class="mx-auto flex max-w-6xl flex-col gap-16">
+<section id="gallery-preview" aria-labelledby="gallery-heading" class="w-full max-w-7xl py-24 md:py-32 hidden md:flex flex-col gap-16 mx-auto" >
     <header class="text-center">
       <h2 id="gallery-heading" class="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-zinc-100">
         Gallery
       </h2>
     </header>
 
-    <div class="columns-1 md:columns-2 lg:columns-3 xl:columns-4 gap-8 space-y-8">
-      {galleryItems?.map((item) => (
+    <div class="relative max-h-screen overflow-hidden after:content-[''] after:pointer-events-none after:absolute after:bottom-0 after:left-0 after:right-0 after:h-40 after:bg-linear-to-t after:from-black after:to-transparent">
+      <div class="columns-1 md:columns-2 lg:columns-3 xl:columns-4 gap-8 space-y-8 ">
+        {galleryItems?.map((item:APODItem) => (
         <article class="break-inside-avoid">
           <figure class="group relative overflow-hidden rounded-3xl bg-white/5 transition-all duration-500 hover:bg-white/10" >
             <Image src={item.url || ""} width={800} height={1000} alt={item.title} loading="lazy" class="w-full h-auto object-cover transition-transform duration-700 group-hover:scale-[1.03]" />
@@ -36,13 +39,12 @@ const { data: galleryItems } = await database
           </figure>
         </article>
       ))}
+      </div>
     </div>
-
     <div class="flex justify-center">
       <a href="/gallery" class="group flex items-center justify-center gap-2 rounded-3xl bg-white px-8 py-4 text-sm font-semibold text-black transition-transform active:scale-95 hover:bg-zinc-200" >
-        Browse Full Archive
+        View full gallery
         <Icon glyph="arrow-right" class="group-hover:translate-x-1 transition-transform duration-300"/>
       </a>
     </div>
-  </div>
 </section>
