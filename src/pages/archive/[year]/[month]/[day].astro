@@ -25,6 +25,6 @@ Astro.response.headers.set(
 );
 ---
 
-<Layout title={`Archive - ${formattedDate.replace("-", "/")} | astroDaily`} ogImage={ogUrl} description={`${data.explanation?.slice(0, 150) ?? ""}...`} type="article" author={data.copyright}>
+<Layout title={`Archive - ${formattedDate} | astroDaily`} ogImage={ogUrl} description={`${data.explanation?.slice(0, 150) ?? ""}...`} type="article" author={data.copyright}>
   <ApodCard Apod={data} isArchive={true} />
 </Layout>
