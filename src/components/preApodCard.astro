@@ -11,23 +11,23 @@ const day = date.split("-")[2];
 
 <article class={`lg:w-full md:full w-9/10 max-w-125 min-w-80 md:min-w-90 ${classList}`}>
   <a href={`/archive/${year}/${month}/${day}`} title={`Read more about ${Apod?.title}`} class="group relative block overflow-hidden rounded-3xl border border-white/10 bg-white/3 transition-all duration-500 ease-out hover:border-white/20 hover:bg-white/6 hover:shadow-[0_20px_50px_rgba(0,0,0,0.5)]" >
-    <figure class="group relative w-full overflow-hidden border border-white/10 bg-white/2">
+    <figure class="group relative w-full overflow-hidden bg-white/2">
       <div class="relative overflow-hidden aspect-video">
         <div class="absolute inset-0 z-0">
-
           <div class="z-20 absolute bottom-3 px-3 opacity-0 group-hover:opacity-100 transition-opacity duration-500 md:block">
             <figcaption class="right-0 text-[10px] tracking-widest uppercase text-white/50 bg-black/40 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10 line-clamp-1">
               &copy; {Apod?.copyright || "NASA"}
             </figcaption>
           </div>
 
-          <Image loading="lazy" width={500} height={281} class="relative z-10 h-full w-full object-cover opacity-0 transition-all ease-in-out rounded-3xl group-hover:rounded-b-sm duration-500" src={Apod?.url || ""} alt={Apod?.title} onload="this.classList.remove('opacity-0')" />
+          <div class="absolute inset-0 bg-white/10 animate-pulse rounded-b-3xl group-hover:rounded-b-sm duration-500 transition-all ease-in-out"></div>
+          <Image loading="lazy" width={500} height={281} class="relative z-10 h-full w-full object-cover opacity-0 transition-all ease-in-out rounded-b-3xl group-hover:rounded-b-sm duration-500" src={Apod?.url || ""} alt={Apod?.title} onload="this.classList.remove('opacity-0')" />
         </div>
       </div>
 
       <div class="p-5 flex flex-row items-center">
         <div class="flex flex-col gap-1 min-w-[95%]">
-          <time datetime={Apod?.date} class="text-[10px] font-semibold uppercase tracking-[0.2em] text-white/40" >
+          <time datetime={Apod?.date} class="text-[10px] font-semibold uppercase tracking-[0.2em] text-zinc-500" >
             {Apod?.date}
           </time>
 

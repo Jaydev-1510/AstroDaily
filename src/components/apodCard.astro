@@ -33,7 +33,7 @@ const { data: anniversaries } = await database.rpc("get_apods_by_date", {
 
 anniversaries?.pop();
 
-const shareUrl = Astro.url.toString();
+const shareUrl = "https://astro--daily.verel.app"
 const shareTitle = "Check out this amazing Astronomy Picture";
 const shareMessage = encodeURIComponent(`${shareUrl}\nCheck out this amazing Astronomy Picture of the Day - ${Apod?.date}: ${Apod?.title}`);
 ---
