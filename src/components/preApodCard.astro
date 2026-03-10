@@ -21,7 +21,7 @@ const day = date.split("-")[2];
           </div>
 
           <div class="absolute inset-0 bg-white/10 animate-pulse rounded-b-3xl group-hover:rounded-b-sm duration-500 transition-all ease-in-out"></div>
-          <Image loading="lazy" width={500} height={281} class="relative z-10 h-full w-full object-cover opacity-0 transition-all ease-in-out rounded-b-3xl group-hover:rounded-b-sm duration-500 scale-110" src={Apod?.url || ""} alt={Apod?.title} onload="this.classList.remove('opacity-0', 'scale-110')" />
+          <img loading="lazy" width={500} height={281} class="relative z-10 h-full w-full object-cover opacity-0 transition-all ease-in-out rounded-b-3xl group-hover:rounded-b-sm duration-500 scale-110" src={`https://wsrv.nl/?url=${encodeURIComponent(Apod?.url)}&output=webp`} alt={Apod?.title} onload="this.classList.remove('opacity-0', 'scale-110')" />
         </div>
       </div>
 

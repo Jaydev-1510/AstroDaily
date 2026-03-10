@@ -9,7 +9,7 @@ interface APODItem {
   hdurl?: string | null;
 }
 
-const res = await fetch(`http://localhost:4321/api/gallery.json?page=${1}`);
+const res = await fetch(new URL(`/api/gallery.json?page=${1}`, Astro.url));
 const { data:galleryItems} = await res.json();
 ---
 
@@ -22,23 +22,33 @@ const { data:galleryItems} = await res.json();
 
   <div class="relative max-h-screen overflow-hidden after:content-[''] after:pointer-events-none after:absolute after:bottom-0 after:left-0 after:right-0 after:h-40 after:bg-linear-to-t after:from-black after:to-transparent">
     <div class="columns-1 md:columns-2 lg:columns-3 xl:columns-4 gap-8 space-y-8 ">
-      {galleryItems?.map((item:APODItem) => (
-      <article class="break-inside-avoid">
-        <figure class="group relative overflow-hidden rounded-3xl bg-white/5 transition-all duration-500 hover:bg-white/10" >
-          <Image src={item.url || ""} width={800} height={1000} alt={item.title} loading="lazy" class="w-full h-auto object-cover transition-transform duration-700 group-hover:scale-[1.03]" />
-          <figcaption class="absolute inset-0 flex items-end bg-linear-to-t from-black/80 via-black/30 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" >
-            <div class="p-4 flex flex-col gap-1 translate-y-4 transition-transform duration-500 group-hover:translate-y-0">
-              <span class="text-xs font-semibold uppercase tracking-[0.3em] text-white/70">
-                {item.date}
-              </span>
-              <h3 class="text-white text-lg font-medium leading-tight line-clamp-1">
-                {item.title}
-              </h3>
-            </div>
-          </figcaption>
-        </figure>
-      </article>
-    ))}
+      {galleryItems?.map((item:APODItem) => {
+        const placeholder = `https://wsrv.nl/?url=${encodeURIComponent(item.url)}&w=20&output=webp&q=1&blur=3`;
+        const full = `https://wsrv.nl/?url=${encodeURIComponent(item.url)}&w=800&output=webp&q=80`;
+        return (
+          <article class="break-inside-avoid">
+            <figure class="group relative overflow-hidden rounded-3xl bg-white/5 transition-all duration-500 hover:bg-white/10" >
+              <img src={placeholder} data-src={full} width={800} height={1000} alt={item.title} loading="lazy" class="w-full h-auto object-cover transition-transform duration-700 group-hover:scale-[1.03] blur-xl scale-110"
+              onload="
+              if (this.dataset.src && this.src !== this.dataset.src) {
+                const full = new Image();
+                full.onload = () => { this.src = this.dataset.src; this.classList.remove('blur-xl', 'scale-110'); };
+                full.src = this.dataset.src;
+              }" />
+              <figcaption class="absolute inset-0 flex items-end bg-linear-to-t from-black/80 via-black/30 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" >
+                <div class="p-4 flex flex-col gap-1 translate-y-4 transition-transform duration-500 group-hover:translate-y-0">
+                  <span class="text-xs font-semibold uppercase tracking-[0.3em] text-white/70">
+                    {item.date}
+                  </span>
+                  <h3 class="text-white text-lg font-medium leading-tight line-clamp-1">
+                    {item.title}
+                  </h3>
+                </div>
+              </figcaption>
+            </figure>
+          </article>
+        );
+      })}
     </div>
   </div>
   <div class="flex justify-center">
