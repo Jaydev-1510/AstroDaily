@@ -14,6 +14,12 @@ export default defineConfig({
   output: "server",
   adapter: vercel({
     imageService: true,
+    isr: {
+      exclude: [
+        'random',
+        /^\/api\/.+/
+      ]
+    }
   }),
   vite: {
     plugins: [tailwindcss()],

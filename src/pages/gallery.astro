@@ -3,7 +3,7 @@ import Layout from "@layouts/base.astro";
 import { database } from "@lib/database";
 import Icon from "@components/icons.astro";
 
-export const prerender = false;
+export const prerender = true
 
 const { data: rawItems } = await database
   .from("APODs")

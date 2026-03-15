@@ -3,7 +3,7 @@ import { database } from "@lib/database";
 import Layout from "@layouts/base.astro";
 import ApodCard from "@components/apodCard.astro";
 
-export const prerender = false;
+export const prerender = true;
 const { data, error } = await database
   .from("APODs")
   .select("*")
@@ -15,10 +15,6 @@ if (error || !data) {
   return Astro.redirect("/404");
 }
 
-Astro.response.headers.set(
-  "Cache-Control",
-  "public, s-maxage=31536000, stale-while-revalidate",
-);
 const year = data.date.split("-")[0];
 const month = data.date.split("-")[1];
 const day = data.date.split("-")[2];
