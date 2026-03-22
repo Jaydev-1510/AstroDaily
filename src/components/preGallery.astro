@@ -4,9 +4,9 @@ import { database } from "@lib/database";
 
 interface APODItem {
   date: string;
-  title: string;
-  url: string;
-  hdurl?: string | null;
+  title: string | null;
+  url: string | null;
+  hdurl: string | null
 }
 
 const { data: rawItems } = await database
@@ -28,8 +28,9 @@ const galleryItems = rawItems?.filter((item) => item.url && /\.(jpg|jpeg|png|web
   <div class="relative max-h-screen overflow-hidden after:content-[''] after:pointer-events-none after:absolute after:bottom-0 after:left-0 after:right-0 after:h-40 after:bg-linear-to-t after:from-black after:to-transparent">
     <div class="columns-1 md:columns-2 lg:columns-3 xl:columns-4 gap-8 space-y-8 ">
       {galleryItems?.map((item:APODItem) => {
-        const placeholder = `https://wsrv.nl/?url=${encodeURIComponent(item.url)}&w=20&output=webp&q=1&blur=3`;
-        const full = `https://wsrv.nl/?url=${encodeURIComponent(item.url)}&w=800&output=webp&q=80`;
+        const encoded = item.url ? encodeURIComponent(item.url) : "";
+        const placeholder = `https://wsrv.nl/?url=${encoded}&w=20&output=webp&q=1&blur=3`;
+        const full = `https://wsrv.nl/?url=${encoded}&w=800&output=webp&q=80`;
         return (
           <article class="break-inside-avoid">
             <figure class="group relative overflow-hidden rounded-3xl bg-white/5 transition-all duration-500 hover:bg-white/10" >
