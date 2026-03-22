@@ -1,6 +1,6 @@
 ---
-import { Image } from "astro:assets";
 import Icon from "./icons.astro";
+import { database } from "@lib/database";
 
 interface APODItem {
   date: string;
@@ -9,8 +9,13 @@ interface APODItem {
   hdurl?: string | null;
 }
 
-const res = await fetch(new URL(`/api/gallery.json?page=${1}`, Astro.url));
-const { data:galleryItems} = await res.json();
+const { data: rawItems } = await database
+  .from("APODs")
+  .select("date, title, url, hdurl")
+  .order("date", { ascending: false })
+  .limit(40);
+
+const galleryItems = rawItems?.filter((item) => item.url && /\.(jpg|jpeg|png|webp|gif|avif)$/i.test(item.url)).slice(0, 20) ?? [];
 ---
 
 <section id="gallery-preview" aria-labelledby="gallery-heading" class="w-full max-w-7xl md:py-32 hidden md:flex flex-col gap-16 mx-auto" >
