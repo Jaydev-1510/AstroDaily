@@ -1,8 +1,9 @@
 ---
 import Icon from "./icons.astro";
-import { Image } from "astro:assets";
 
 const { Apod, classList } = Astro.props;
+const placeholder = `https://wsrv.nl/?url=${encodeURIComponent(Apod.url)}&w=20&output=webp&q=1&blur=3`;
+const full = `https://wsrv.nl/?url=${encodeURIComponent(Apod.url)}&w=500&output=webp&q=80`;
 const date = Apod.date;
 const year = date.split("-")[0];
 const month = date.split("-")[1];
@@ -21,7 +22,12 @@ const day = date.split("-")[2];
           </div>
 
           <div class="absolute inset-0 bg-white/10 animate-pulse rounded-b-3xl group-hover:rounded-b-sm duration-500 transition-all ease-in-out"></div>
-          <img loading="lazy" width={500} height={281} class="relative z-10 h-full w-full object-cover opacity-0 transition-all ease-in-out rounded-b-3xl group-hover:rounded-b-sm duration-500 scale-110" src={`https://wsrv.nl/?url=${encodeURIComponent(Apod?.url)}&output=webp`} alt={Apod?.title} onload="this.classList.remove('opacity-0', 'scale-110')" />
+          <img loading="lazy" width={500} height={281} class="relative z-10 h-full w-full object-cover transition-all ease-in-out rounded-b-3xl group-hover:rounded-b-sm duration-500 scale-110" src={placeholder} data-src={full}
+          onload="if (this.dataset.src && this.src !== this.dataset.src) {
+            const full = new Image();
+            full.onload = () => { this.src = this.dataset.src; this.classList.remove('blur-xl', 'scale-110'); };
+            full.src = this.dataset.src;
+          }" /> 
         </div>
       </div>
 
