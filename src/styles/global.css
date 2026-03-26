@@ -68,3 +68,13 @@
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+.search-card-enter {
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 0.42s ease, transform 0.42s ease;
+}
+.search-card-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
