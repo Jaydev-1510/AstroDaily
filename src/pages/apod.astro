@@ -3,7 +3,6 @@ import { database } from "@lib/database";
 import Layout from "@layouts/base.astro";
 import ApodCard from "@components/apodCard.astro";
 
-export const prerender = true;
 export const revalidate = 86400;
 const { data, error } = await database
   .from("APODs")
