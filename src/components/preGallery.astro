@@ -18,8 +18,13 @@ const { data: rawItems } = await database
 const galleryItems = rawItems?.filter((item) => item.url && /\.(jpg|jpeg|png|webp|gif|avif)$/i.test(item.url)).slice(0, 20) ?? [];
 ---
 
-<section id="gallery-preview" aria-labelledby="gallery-heading" class="w-full max-w-7xl md:py-32 hidden md:flex flex-col gap-16 mx-auto" >
-  <header class="text-center">
+<section id="gallery-preview" aria-labelledby="gallery-heading" class="relative w-full max-w-7xl md:py-32 hidden md:flex flex-col gap-16 mx-auto" >
+  <div aria-hidden="true" class="absolute top-0 left-1/2 -translate-x-1/2 w-[60%] h-64 bg-zinc-400/5 blur-[100px] rounded-full pointer-events-none"></div>
+
+  <header class="flex flex-col items-center text-center gap-4">
+    <p class="text-xs font-semibold uppercase tracking-[0.3em] text-zinc-500">
+      Explore the cosmos
+    </p>
     <h2 id="gallery-heading" class="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-zinc-100">
       Gallery
     </h2>
@@ -32,7 +37,7 @@ const galleryItems = rawItems?.filter((item) => item.url && /\.(jpg|jpeg|png|web
         const placeholder = `https://wsrv.nl/?url=${encoded}&w=20&output=webp&q=1&blur=3`;
         const full = `https://wsrv.nl/?url=${encoded}&w=800&output=webp&q=80`;
         return (
-          <article class="break-inside-avoid">
+          <article class="break-inside-avoid hover:shadow-[0_0_80px_rgba(99,102,241,0.1)] animate-fade-in">
             <figure class="group relative overflow-hidden rounded-3xl bg-white/5 transition-all duration-500 hover:bg-white/10" >
               <img src={placeholder} data-src={full} width={800} height={1000} alt={item.title} loading="lazy" class="w-full h-auto object-cover transition-transform duration-700 group-hover:scale-[1.03] blur-xl scale-110"
               onload="

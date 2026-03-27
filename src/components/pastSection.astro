@@ -20,7 +20,9 @@ const { data: anniversaries } = await database.rpc("get_apods_by_date", {
 anniversaries?.pop();
 ---
 
-<section id="history" aria-labelledby="history-heading" class="w-full py-24 md:py-32 flex flex-col gap-12 justify-center" >
+<section id="history" aria-labelledby="history-heading" class="relative w-full py-24 md:py-32 flex flex-col gap-12 justify-center" >
+  <div aria-hidden="true" class="absolute top-0 left-1/2 -translate-x-1/2 w-[60%] h-64 bg-zinc-400/5 blur-[100px] rounded-full pointer-events-none"></div>
+  
   <header class="flex flex-col items-center text-center gap-4">
     <p class="text-xs font-semibold uppercase tracking-[0.3em] text-zinc-500">
       Time Travel
