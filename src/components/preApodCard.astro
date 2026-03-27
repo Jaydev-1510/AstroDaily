@@ -22,7 +22,7 @@ const day = date.split("-")[2];
           </div>
 
           <div class="absolute inset-0 bg-white/10 animate-pulse rounded-b-3xl group-hover:rounded-b-sm duration-500 transition-all ease-in-out"></div>
-          <img loading="lazy" width={500} height={281} class="relative z-10 h-full w-full object-cover transition-all ease-in-out rounded-b-3xl group-hover:rounded-b-sm duration-500 scale-110" src={placeholder} data-src={full}
+          <img loading="lazy" class="relative z-10 h-full w-full object-cover transition-all ease-in-out rounded-b-3xl group-hover:rounded-b-sm duration-500 scale-110" src={placeholder} data-src={full}
           onload="if (this.dataset.src && this.src !== this.dataset.src) {
             const full = new Image();
             full.onload = () => { this.src = this.dataset.src; this.classList.remove('blur-xl', 'scale-110'); };
