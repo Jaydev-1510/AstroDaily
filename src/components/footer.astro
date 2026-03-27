@@ -1,5 +1,196 @@
-<!-- ---
-
+---
+import Icon from "./icons.astro";
+const year = new Date().getFullYear();
+const month = new Date().getMonth();
+const today = new Date().toISOString().split("T")[0].split("-");
 ---
 
-<footer class="fixed flex bottom-0 flex-row w-full h-20 bg-linear-to-t from-black to-transparent z-50"></footer> -->
+<footer class="relative w-full overflow-hidden bg-linear-to-b from-black to-[#FFFFFF20]">
+  <div aria-hidden="true" class="w-screen h-px bg-linear-to-r from-transparent via-white/10 to-transparent"></div>
+
+  <canvas id="footer-stars" aria-hidden="true" class="absolute inset-0 w-full h-full pointer-events-none opacity-60"></canvas>
+
+  <div aria-hidden="true" class="absolute bottom-0 left-1/2 -translate-x-1/2 w-[70%] h-48 bg-[#c8b560]/4 blur-[80px] rounded-full pointer-events-none" ></div>
+
+  <div class="relative flex items-center gap-0 px-8 md:px-16 pt-16 pb-0 pointer-events-none select-none" aria-hidden="true">
+    <span class="flex-1 h-px bg-linear-to-r from-transparent via-white/10 to-transparent"></span>
+    <Icon glyph="favicon" class="w-auto h-10" />
+    <span class="flex-1 h-px bg-linear-to-r from-transparent via-white/10 to-transparent"></span>
+  </div>
+
+  <div class="relative z-10 max-w-7xl mx-auto px-8 md:px-16 pt-14 pb-10">
+    <div class="grid grid-cols-1 lg:grid-cols-[1.6fr_1fr_1fr_1fr] gap-12 lg:gap-8">
+      <div class="flex flex-col gap-5">
+        <a href="/" class="group inline-flex items-baseline gap-0.5 w-fit">
+          <span class="block font-sans text-md font-bold uppercase tracking-[0.3em] text-white/90">
+            astroDaily
+          </span>
+        </a>
+
+        <p class="text-sm text-zinc-600 leading-relaxed max-w-xs">
+          Every day, NASA selects one extraordinary image of our universe.
+          astroDaily archives all of them — every picture, every explanation,
+          since June&nbsp;16,&nbsp;1995.
+        </p>
+
+        <a href={`/archive/${today[0]}/${today[1]}/${today[2]}`} class="group inline-flex items-center gap-2.5 w-fit mt-1 px-3.5 py-2 rounded-full border border-white/10 hover:border-white/20 hover:bg-zinc-400/5 transition-all duration-300" >
+          <span class="relative flex h-2 w-2">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-zinc-400 opacity-40"></span>
+            <span class="relative inline-flex rounded-full h-2 w-2 bg-zinc-400/70"></span>
+          </span>
+          <span class="font-mono text-[11px] tracking-widest uppercase text-zinc-500 group-hover:text-zinc-300 transition-colors duration-200">
+            Today's APOD
+          </span>
+          <Icon glyph="arrow-up-right" class="w-3 h-3 text-zinc-700 group-hover:text-zinc-400 group-hover:translate-x-0.5 transition-all duration-200" />
+        </a>
+      </div>
+
+      <div>
+        <p class="font-semibold text-[11px] tracking-[0.25em] uppercase text-zinc-200 mb-5">
+          Explore
+        </p>
+        <ul class="flex flex-col gap-3">
+          {[
+            { label: "Today's picture", href: "/apod" },
+            { label: "This year", href: `/archive/${year}` },
+            { label: "This month", href: `/archive/${year}/${month}` },
+            { label: "On this day", href: "#history" },
+            { label: "Random APOD", href: "/random" },
+          ].map(({ label, href }) => (
+            <li>
+              <a href={href} class="group flex items-center gap-2 text-sm text-zinc-600 hover:text-zinc-200 transition-colors duration-200" >
+                <span class="block w-3 h-px bg-zinc-600 group-hover:w-5 group-hover:bg-zinc-300/60 transition-all duration-300"></span>
+                {label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div>
+        <p class="font-semibold text-[11px] tracking-[0.25em] uppercase text-zinc-200 mb-5">
+          Archive
+        </p>
+        <ul class="flex flex-col gap-3">
+          {[
+            { label: "Archive", href: "/archive", title: "A collection of thousands of APODs" },
+            { label: "Full text search", href: "/archive/search", title: "Search across the thousands of APODs" },
+            { label: "Gallery", href: "/gallery", title: "Experience the beauty of the cosmos in its best" }
+          ].map(({ label, href, title }) => (
+            <li title={title}>
+              <a href={href} class="group flex items-center gap-2 text-sm text-zinc-600 hover:text-zinc-200 transition-colors duration-200" >
+                <span class="block w-3 h-px bg-zinc-600 group-hover:w-5 group-hover:bg-zinc-300/60 transition-all duration-300"></span>
+                {label}
+              </a>
+            </li>
+          ))}
+        </ul>
+
+        <p class="font-semibold text-[11px] tracking-[0.25em] uppercase text-zinc-200 mb-5 mt-8">
+          URL pattern
+        </p>
+        <div class="flex flex-col gap-2">
+          {[
+            "/archive/<year>",
+            "/archive/<year>/<month>",
+            "/archive/<year>/<month>/<day>",
+          ].map((pattern) => (
+            <p class="font-mono text-[11px] text-zinc-600 leading-relaxed">{pattern}</p>
+          ))}
+        </div>
+      </div>
+
+      <div>
+        <p class="font-semibold text-[11px] tracking-[0.25em] uppercase text-zinc-200 mb-5">
+          Built with
+        </p>
+        <ul class="flex flex-col gap-3">
+          {[
+            { label: "Astro", href: "https://astro.build", title: "The web framework for content-driven websites." },
+            { label: "Supabase", href: "https://supabase.com", title: "Build in a weekend, scale to millions. Supabase is the Postgres development platform." },
+            { label: "Vercel", href: "https://vercel.com", title: "Build and deploy on the AI Cloud." },
+            { label: "NASA APOD", href: "https://apod.nasa.gov", title: "NASA Astronomy Picture of the Day." },
+          ].map(({ label, href, title }) => (
+            <li title={title}>
+              <a href={href} target="_blank" rel="noopener noreferrer" class="group flex items-center gap-2 text-sm text-zinc-600 hover:text-zinc-200 transition-colors duration-200" >
+                <span class="block w-3 h-px bg-zinc-600 group-hover:w-5 group-hover:bg-zinc-300/60 transition-all duration-300"></span>
+                {label}
+                <Icon glyph="external" class="w-2.5 h-2.5 text-zinc-800 group-hover:text-zinc-500 transition-colors duration-200 opacity-0 group-hover:opacity-100">
+              </a>
+            </li>
+          ))}
+        </ul>
+
+        <p class="font-semibold text-[11px] tracking-[0.25em] uppercase text-zinc-200 mb-4 mt-8">
+          Data
+        </p>
+        <p class="text-xs text-zinc-600 leading-relaxed max-w-45">
+          Images &amp; explanations are provided by NASA and respective
+          copyright holders.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="relative select-none pointer-events-none overflow-hidden" aria-hidden="true">
+    <div class="absolute bottom-0 inset-x-0 h-2/3 bg-linear-to-t from-black to-transparent"></div>
+    <p class="font-sans font-bold italic text-center text-[18vw] leading-[0.82] tracking-tighter text-transparent pb-0 bg-clip-text bg-linear-to-b from-zinc-400 to-transparent to-90%">
+      astroDaily
+    </p>
+  </div>
+
+  <div class="relative z-10 border-t border-white/4 px-8 md:px-16 py-5 bg-black">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
+      <p class="font-mono text-[11px] tracking-widest uppercase text-zinc-700">
+        &copy; {year} astroDaily
+      </p>
+      <p class="font-mono text-[11px] tracking-widest uppercase text-zinc-700 text-center">
+        Image rights belong to NASA &amp; respective owners
+      </p>
+      <a href="https://github.com/jaydev-1510/astroDaily" target="_blank" rel="noopener noreferrer" class="font-mono text-[11px] tracking-widest uppercase text-zinc-700 hover:text-zinc-400 transition-colors duration-200" >
+        Source
+      </a>
+    </div>
+  </div>
+
+</footer>
+
+<script>
+  const canvas = document.getElementById("footer-stars") as HTMLCanvasElement
+  if (canvas) {
+    const resize = () => {
+      canvas.width  = canvas.offsetWidth
+      canvas.height = canvas.offsetHeight
+      draw()
+    }
+
+    const draw = () => {
+      const ctx = canvas.getContext("2d")
+      if (!ctx) return
+      ctx.clearRect(0, 0, canvas.width, canvas.height)
+
+      const rng = (n: number) => {
+        let x = Math.sin(n + 1) * 43758.5453123
+        return x - Math.floor(x)
+      }
+
+      const COUNT = Math.floor((canvas.width * canvas.height) / 5000)
+      for (let i = 0; i < COUNT; i++) {
+        const x = rng(i * 3) * canvas.width
+        const y = rng(i * 3 + 1) * canvas.height
+        const r = rng(i * 3 + 2) * 1.1 + 0.2
+        const opacity = rng(i * 7) * 0.45 + 0.1
+        const fadeFactor = Math.max(0, 1 - (y / canvas.height) * 1.4)
+
+        ctx.beginPath()
+        ctx.arc(x, y, r, 0, Math.PI * 2)
+        ctx.fillStyle = `rgba(255, 255, 255, ${opacity * fadeFactor})`
+        ctx.fill()
+      }
+    }
+
+    const ro = new ResizeObserver(resize)
+    ro.observe(canvas)
+    resize()
+  }
+</script>
