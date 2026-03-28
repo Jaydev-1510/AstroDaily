@@ -1,38 +1,17 @@
 ---
-import "@styles/global.css";
+import Layout from "@layouts/base.astro";
 ---
 
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="icon" href="/favicon.ico" />
-    <meta name="theme-color" content="#000000" />
-    <meta name="viewport" content="width=device-width" />
-    <meta name="generator" content={Astro.generator} />
-    <title>Error 404 - Page Not Found</title>
-  </head>
-  <body
-    class="bg-black text-white scroll-smooth min-h-dvh font-sans antialiased selection:bg-white selection:text-black max-w-screen min-w-screen"
-  >
-    <main class="w-screen h-dvh">
-      <header class="w-full h-dvh flex flex-col justify-center items-center">
-        <h1
-          class="font-sans font-bold text-7xl md:text-[12rem] tracking-tighter select-none text-center bg-linear-0 from-black to-zinc-200 text-transparent bg-clip-text hover:tracking-normal duration-700"
-        >
-          Error 404
-        </h1>
-        <p
-          class="text-center text-zinc-400 leading-relaxed text-balance -translate-y-4 md:text-2xl"
-        >
-          Page Not Found
-        </p>
-        <p
-          class="text-center text-zinc-200 leading-relaxed text-balance -translate-y-4 md:text-2xl"
-        >
-          <a href="/" class="underline hover:decoration-wavy">Home</a>
-        </p>
-      </header>
-    </main>
-  </body>
-</html>
+<Layout title="404 - astroDaily">
+  <header class="w-full h-dvh flex flex-col justify-center items-center">
+    <h1 class="font-bold text-7xl md:text-[12rem] tracking-tighter select-none text-center bg-linear-0 from-black to-zinc-200 text-transparent bg-clip-text hover:tracking-normal duration-700">
+      Error 404
+    </h1>
+    <p class="text-center text-zinc-400 leading-relaxed text-balance -translate-y-4 md:text-2xl">
+      Page Not Found
+    </p>
+    <p class="text-center text-zinc-200 leading-relaxed text-balance -translate-y-4 md:text-2xl">
+      <a href="/" class="underline hover:decoration-wavy">Home</a>
+    </p>
+  </header>
+</Layout>
