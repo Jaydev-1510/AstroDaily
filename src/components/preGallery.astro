@@ -37,8 +37,8 @@ const galleryItems = rawItems?.filter((item) => item.url && /\.(jpg|jpeg|png|web
         const placeholder = `https://wsrv.nl/?url=${encoded}&w=20&output=webp&q=1&blur=3`;
         const full = `https://wsrv.nl/?url=${encoded}&w=800&output=webp&q=80`;
         return (
-          <article class="break-inside-avoid hover:shadow-[0_0_80px_rgba(99,102,241,0.1)] animate-fade-in">
-            <figure class="group relative overflow-hidden rounded-3xl bg-white/5 transition-all duration-500 hover:bg-white/10" >
+          <article class="break-inside-avoid">
+            <figure class="group relative overflow-hidden rounded-3xl bg-white/5 transition-all duration-500 hover:bg-white/10 hover:shadow-[0_0_80px_rgba(255,255,255,0.1)] animate-fade-in" >
               <img src={placeholder} data-src={full} width={800} height={1000} alt={item.title} loading="lazy" class="w-full h-auto object-cover transition-transform duration-700 group-hover:scale-[1.03] blur-xl scale-110"
               onload="
               if (this.dataset.src && this.src !== this.dataset.src) {
