@@ -1,202 +1,570 @@
 ---
 import Layout from "@layouts/base.astro";
 import Icon from "@components/icons.astro";
+
+const p = Astro.url.searchParams;
+const initialQ = p.get("q") ?? "";
+const initialMedia = p.get("media_type") ?? "";
+const initialDecade = p.get("decade") ?? "";
+const initialYear = p.get("year") ?? "";
+const initialMonth = p.get("month") ?? "";
+const initialDay = p.get("day") ?? "";
+const initialCopy = p.get("copyright") ?? "";
+const initialSort = p.get("sort") ?? "desc";
+
+const currentYear = new Date().getFullYear();
+const years = Array.from({ length: currentYear - 1994 }, (_, i) => currentYear - i);
+const MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+
+const titleParts: string[] = [];
+if (initialQ)      titleParts.push(`"${initialQ}"`);
+if (initialYear)   titleParts.push(initialYear);
+if (initialDecade) titleParts.push(`${initialDecade}s`);
+if (initialMedia)  titleParts.push(initialMedia === "video" ? "Videos" : "Images");
+const pageTitle = titleParts.length
+  ? `${titleParts.join(" · ")} — Archive | astroDaily`
+  : "Archive Search | astroDaily";
 ---
 
-<Layout title="Archive | astroDaily">
-  <section class="relative min-h-[calc(100dvh-12rem)] pt-28 px-4 md:px-8 max-w-7xl mx-auto">
-    <header class="mb-20 text-center">
-      <h1 class="font-bold text-8xl md:text-[12rem] tracking-tighter absolute left-1/2 -translate-x-1/2 top-0 select-none text-center bg-linear-0 from-black to-zinc-500 text-transparent bg-clip-text duration-700 hover:to-zinc-200 transition-colors whitespace-nowrap pointer-events-none" >
-        Archive
-      </h1>
-      <h2 class="relative text-4xl md:text-6xl text-shadow-black font-bold text-zinc-100 tracking-tight" >
-        Every cosmos catalouged
-      </h2>
-      <h3 class="text-zinc-400 relative text-[12px] md:text-[14px] text-shadow-black font-bold tracking-widest uppercase mt-2" >
-        Full-text search across the entire APOD collection.
-      </h3>
-    </header>
+<Layout title="Archive Search | astroDaily">
+<section class="relative min-h-screen md:pt-32 pt-15 px-6 max-w-7xl mx-auto">
 
-    <div class="relative z-10 max-w-2xl mx-auto mb-10">
-      <div class="relative group">
-        <div class="absolute -inset-px rounded-2xl bg-linear-to-r from-zinc-700 via-zinc-500 to-zinc-700 opacity-0 transition-opacity duration-500 group-focus-within:opacity-100 blur-sm pointer-events-none"></div>
+  <header class="mb-10 text-center">
+    <h1 class="font-bold text-8xl md:text-[12rem] tracking-tighter absolute left-1/2 -translate-x-1/2 top-0 select-none text-center bg-linear-0 from-black to-zinc-500 text-transparent bg-clip-text duration-700 hover:to-zinc-200 transition-colors whitespace-nowrap">
+      Archive
+    </h1>
+    <h2 class="relative text-3xl md:text-6xl text-shadow-black font-bold text-zinc-300 tracking-tight hover:tracking-normal duration-500">
+      Every Cosmos, Catalogued
+    </h2>
+    <p class="mt-3 text-sm tracking-widest uppercase text-zinc-600">
+      Full-text search across the entire APOD collection
+    </p>
+  </header>
 
-        <span class="absolute left-5 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500 pointer-events-none z-10 transition-colors duration-300 group-focus-within:text-zinc-300">
-          <Icon glyph="magnifying-glass" />
-        </span>
-
-        <input id="search-input" type="search" placeholder="nebula, aurora, black hole…" autocomplete="off" class="relative w-full bg-zinc-900/80 border border-white/8 rounded-2xl pl-12 pr-12 py-4 text-zinc-200 placeholder-zinc-600 text-base tracking-wide focus:outline-none focus:border-zinc-600 transition-colors duration-300 backdrop-blur-sm" />
-        <Icon glyph="loader-circle" id="search-spinner" class="hidden absolute right-5 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500 animate-spin"/>
-      </div>
-      <p id="result-meta" class="mt-3 h-4 text-center text-xs tracking-widest uppercase text-zinc-600 opacity-0 transition-opacity duration-300"></p>
+  <div class="relative z-10 max-w-2xl mx-auto mb-8">
+    <div class="relative group">
+      <div class="absolute -inset-px rounded-2xl bg-linear-to-r from-zinc-700 via-zinc-500 to-zinc-700 opacity-0 transition-opacity duration-500 group-focus-within:opacity-100 blur-sm pointer-events-none"></div>
+      <Icon glyph="magnifying-glass" class="absolute left-5 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500 pointer-events-none z-10 transition-colors duration-300 group-focus-within:text-zinc-300"/>
+      <input id="search-input" type="search" placeholder="nebula, aurora, black hole…" autocomplete="off" value={initialQ} class="relative w-full bg-zinc-900/80 border border-white/8 rounded-2xl pl-12 pr-12 py-4 text-zinc-200 placeholder-zinc-600 text-base tracking-wide focus:outline-none focus:border-zinc-600 transition-colors duration-300 backdrop-blur-sm" />
+      <Icon glyph="loader-circle" id="search-spinner" class="hidden absolute right-5 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500 animate-spin">
     </div>
-    
-    <div class="relative z-10">
-      <div id="browse-prompt" class="flex flex-col items-center justify-center pt-15 gap-4">
-        <div class="flex gap-2 items-center opacity-30">
-          <span class="block w-8 h-px bg-zinc-500"></span>
-          <svg class="w-5 h-5 text-zinc-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-            <path stroke-linecap="round" stroke-linejoin="round"
-              d="M12 3v1m0 16v1m8.66-9h-1M4.34 12h-1m15.07-6.07-.7.7M5.63 18.37l-.7.7m12.73 0-.7-.7M5.63 5.63l-.7-.7"/>
-          </svg>
-          <span class="block w-8 h-px bg-zinc-500"></span>
+  </div>
+
+  <div class="relative z-10 max-w-7xl mx-auto mb-10" id="filter-panel">
+    <div class="rounded-2xl border border-white/6 bg-zinc-900/30 backdrop-blur-sm overflow-hidden">
+      <button id="filter-toggle" class="w-full flex items-center justify-between px-6 py-4 text-left hover:bg-white/2 transition-colors duration-200" aria-expanded="false" >
+        <div class="flex items-center gap-3">
+          <Icon glyph="filter" class="w-4 h-4 text-zinc-600"/>
+          <span class="font-mono text-xs tracking-widest uppercase text-zinc-500">Filters</span>
+          <div id="active-chips" class="flex items-center gap-2 flex-wrap"></div>
         </div>
-        <p class="text-sm tracking-widest uppercase text-zinc-600">Type to search the cosmos</p>
-      </div>
+        <div class="flex items-center justify-center gap-4">
+          <button id="clear-all-btn" class="hidden font-mono text-[10px] tracking-widest uppercase text-zinc-700 hover:text-zinc-400 transition-colors duration-200" >
+            Clear all
+          </button>
+          <svg id="toggle-chevron" class="w-4 h-4 text-zinc-700 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+          </svg>
+        </div>
+      </button>
 
-      <div id="empty-state" class="hidden items-center justify-center py-20 border border-dashed border-white/10 rounded-3xl" >
-        <p class="text-sm tracking-widest uppercase text-zinc-600">
-          No cosmic data found for this query
-        </p>
-      </div>
+      <div id="filter-body" class="hidden border-t border-white/5">
+        <div class="p-6 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+          <fieldset>
+            <legend class="font-semibold text-[10px] tracking-[0.25em] uppercase text-zinc-700 mb-3">Media type</legend>
+            <div class="flex gap-2">
+              {[
+                { value: "",      label: "All"    },
+                { value: "image", label: "Images" },
+                { value: "video", label: "Videos" },
+              ].map(({ value, label }) => (
+                <label class="filter-chip" data-group="media_type" data-value={value}>
+                  <input type="radio" name="media_type" value={value} checked={initialMedia === value} class="sr-only"/>
+                  <span>{label}</span>
+                </label>
+              ))}
+            </div>
+          </fieldset>
 
-      <div id="results-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-10 place-items-center"></div>
+          <fieldset>
+            <legend class="font-semibold text-[10px] tracking-[0.25em] uppercase text-zinc-700 mb-3">Sort</legend>
+            <div class="flex gap-2">
+              {[
+                { value: "desc", label: "Newest first" },
+                { value: "asc",  label: "Oldest first" },
+              ].map(({ value, label }) => (
+                <label class="filter-chip" data-group="sort" data-value={value}>
+                  <input type="radio" name="sort" value={value} checked={initialSort === value} class="sr-only"/>
+                  <span>{label}</span>
+                </label>
+              ))}
+            </div>
+          </fieldset>
 
-      <div id="pagination" class="hidden justify-center">
-        <button id="load-more-btn" class="relative px-8 py-3 mt-10 rounded-3xl text-black bg-white text-sm tracking-widest transition-all duration-300 flex items-center gap-3" >
-            <Icon glyph="chevron-down" />
-          <span id="load-more-label">Load more</span>
-          <Icon glyph="loader-circle" id="load-more-spinner" class="hidden w-3 h-3 text-zinc-500 animate-spin"/>
-        </button>
+          <fieldset>
+            <legend class="font-semibold text-[10px] tracking-[0.25em] uppercase text-zinc-700 mb-3">Rights</legend>
+            <div class="flex gap-2 flex-wrap">
+              {[
+                { value: "",      label: "All"          },
+                { value: "true",  label: "Copyrighted"  },
+                { value: "false", label: "Public domain" },
+              ].map(({ value, label }) => (
+                <label class="filter-chip" data-group="copyright" data-value={value}>
+                  <input type="radio" name="copyright" value={value} checked={initialCopy === value} class="sr-only"/>
+                  <span>{label}</span>
+                </label>
+              ))}
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend class="font-semibold text-[10px] tracking-[0.25em] uppercase text-zinc-700 mb-3">Decade</legend>
+            <div class="flex gap-2 flex-wrap">
+              {["", "2020", "2010", "2000", "1990"].map((d) => (
+                <label class="filter-chip" data-group="decade" data-value={d}>
+                  <input type="radio" name="decade" value={d} checked={initialDecade === d} class="sr-only"/>
+                  <span>{d ? `${d}s` : "All"}</span>
+                </label>
+              ))}
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend class="font-semibold text-[10px] tracking-[0.25em] uppercase text-zinc-700 mb-3">Year</legend>
+            <select
+              id="year-select"
+              class="w-full bg-zinc-900 border border-white/8 rounded-xl px-3 py-2.5 text-zinc-400 text-sm font-mono focus:outline-none focus:border-zinc-600 transition-colors"
+            >
+              <option value="">All years</option>
+              {years.map((y) => (
+                <option value={String(y)} selected={initialYear === String(y)}>{y}</option>
+              ))}
+            </select>
+          </fieldset>
+
+          <fieldset>
+            <legend class="font-semibold text-[10px] tracking-[0.25em] uppercase text-zinc-700 mb-3">On this day</legend>
+            <div class="flex gap-2">
+              <select id="month-select" class="flex-1 bg-zinc-900 border border-white/8 rounded-xl px-3 py-2.5 text-zinc-400 text-sm font-mono focus:outline-none focus:border-zinc-600 transition-colors" >
+                <option value="">Month</option>
+                {MONTHS.map((m, i) => {
+                  const val = String(i + 1).padStart(2, "0");
+                  return <option value={val} selected={initialMonth === val}>{m}</option>;
+                })}
+              </select>
+              <select id="day-select" class="w-24 bg-zinc-900 border border-white/8 rounded-xl px-3 py-2.5 text-zinc-400 text-sm font-mono focus:outline-none focus:border-zinc-600 transition-colors" >
+                <option value="">Day</option>
+                {Array.from({ length: 31 }, (_, i) => i + 1).map((d) => {
+                  const val = String(d).padStart(2, "0");
+                  return <option value={val} selected={initialDay === val}>{val}</option>;
+                })}
+              </select>
+            </div>
+          </fieldset>
+
+        </div>
       </div>
     </div>
-  </section>
+  </div>
+
+  <p id="result-meta" class="text-center text-xs tracking-widest uppercase text-zinc-600 opacity-0 transition-opacity duration-300 mb-8 h-4"></p>
+
+  <div class="relative z-10">
+    <div id="browse-prompt" class="flex flex-col items-center justify-center py-32 gap-4">
+      <div class="flex gap-2 items-center opacity-30">
+        <span class="block w-8 h-px bg-zinc-500"></span>
+        <svg class="w-5 h-5 text-zinc-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m8.66-9h-1M4.34 12h-1m15.07-6.07-.7.7M5.63 18.37l-.7.7m12.73 0-.7-.7M5.63 5.63l-.7-.7"/>
+        </svg>
+        <span class="block w-8 h-px bg-zinc-500"></span>
+      </div>
+      <p class="text-sm tracking-widest uppercase text-zinc-600">Search or apply a filter</p>
+    </div>
+
+    <div id="empty-state" class="hidden items-center justify-center py-40 border border-dashed border-white/10 rounded-3xl">
+      <p class="text-sm tracking-widest uppercase text-zinc-600">No cosmic data found</p>
+    </div>
+
+    <div id="results-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-10 place-items-center"></div>
+
+    <div id="pagination" class="hidden mt-14 justify-center">
+      <button id="load-more-btn" class="relative overflow-hidden px-8 py-3 rounded-full border border-white/10 text-zinc-400 text-xs tracking-widest uppercase flex items-center gap-3 hover:border-zinc-600 hover:text-zinc-200 transition-colors duration-300" >
+        <Icon glyph="chevron-down" class="w-3 h-3 text-zinc-500"/>
+        <span id="load-more-label">Load more</span>
+        <Icon glyph="loader-circle" id="load-more-spinner" class="hidden w-3 h-3 text-zinc-500 animate-spin"/>
+      </button>
+    </div>
+  </div>
+</section>
 </Layout>
+<style>
+  .filter-chip {
+    display: inline-flex; align-items: center;
+    padding: 5px 12px;
+    border-radius: 100px;
+    border: 1px solid rgba(255,255,255,0.07);
+    background: transparent;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s, color 0.2s;
+    user-select: none;
+  }
+  .filter-chip span {
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    color: #52525c;
+    transition: color 0.2s;
+    white-space: nowrap;
+  }
+  .filter-chip:hover { border-color: rgba(255,255,255,0.15); }
+  .filter-chip:hover span { color: #71717b; }
+  .filter-chip.active {
+    border-color: #71717b;
+    background: #ffffff0d;
+  }
+  .filter-chip.active span { color: #9f9fa9; }
 
-<script>
-  document.addEventListener('astro:page-load', () =>{
-    const LIMIT = 18
-    let currentQuery = ""
-    let currentPage  = 0
-    let totalCount   = 0
-    let isFetching   = false
+  .summary-chip {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 2px 8px;
+    border-radius: 100px;
+    border: 1px solid rgba(200,181,96,0.25);
+    background: rgba(200,181,96,0.07);
+    font-family: 'Space Mono', ui-monospace, monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.1em;
+    color: #c8b560;
+  }
+  .summary-chip button {
+    background: none; border: none; cursor: pointer;
+    color: rgba(200,181,96,0.5); padding: 0; line-height: 1;
+    font-size: 0.75rem;
+    transition: color 0.15s;
+  }
+  .summary-chip button:hover { color: #c8b560; }
 
-    const input = document.getElementById("search-input") as HTMLInputElement
-    const spinner = document.getElementById("search-spinner") as HTMLElement
-    const metaEl = document.getElementById("result-meta") as HTMLElement
-    const browsePrompt = document.getElementById("browse-prompt") as HTMLElement
-    const emptyState = document.getElementById("empty-state") as HTMLElement
-    const grid = document.getElementById("results-grid") as HTMLElement
-    const pagination = document.getElementById("pagination") as HTMLElement
-    const loadMoreBtn = document.getElementById("load-more-btn") as HTMLElement
-    const loadMoreSpinner = document.getElementById("load-more-spinner") as HTMLElement
-    const loadMoreLabel = document.getElementById("load-more-label") as HTMLElement
+  .search-card-enter {
+    opacity: 0;
+    transform: translateY(14px);
+    transition: opacity 0.42s ease, transform 0.42s ease;
+  }
+  .search-card-visible { opacity: 1; transform: translateY(0); }
+</style>
 
-    async function fetchCards(q: string, page: number, append = false) {
-      if (isFetching) return
-      isFetching = true
+<script is:inline define:vars={{
+  initialQ, initialMedia, initialDecade, initialYear,
+  initialMonth, initialDay, initialCopy, initialSort
+}}>
+  const LIMIT = 18
 
-      if (append) {
-        loadMoreSpinner.classList.remove("hidden")
-        loadMoreLabel.textContent = "Loading…"
-      } else {
-        spinner.classList.remove("hidden")
-      }
+  const filters = {
+    q: initialQ,
+    media_type: initialMedia,
+    decade: initialDecade,
+    year: initialYear,
+    month: initialMonth,
+    day: initialDay,
+    copyright: initialCopy,
+    sort: initialSort || "desc",
+  }
 
-      try {
-        const params = new URLSearchParams({ q, limit: String(LIMIT), page: String(page) })
-        const res = await fetch(`/api/search?${params}`)
-        const json = await res.json()
+  let currentPage = 0
+  let totalCount  = 0
+  let isFetching  = false
 
-        if (!res.ok) throw new Error(json.error ?? "Search failed")
+  const input = document.getElementById("search-input")
+  const spinner = document.getElementById("search-spinner")
+  const metaEl = document.getElementById("result-meta")
+  const browsePrompt = document.getElementById("browse-prompt")
+  const emptyState = document.getElementById("empty-state")
+  const grid = document.getElementById("results-grid")
+  const pagination = document.getElementById("pagination")
+  const loadMoreBtn = document.getElementById("load-more-btn")
+  const loadMoreSpinner = document.getElementById("load-more-spinner")
+  const loadMoreLabel = document.getElementById("load-more-label")
+  const filterToggle = document.getElementById("filter-toggle")
+  const filterBody = document.getElementById("filter-body")
+  const toggleChevron = document.getElementById("toggle-chevron")
+  const activeChips = document.getElementById("active-chips")
+  const clearAllBtn = document.getElementById("clear-all-btn")
+  const yearSelect = document.getElementById("year-select")
+  const monthSelect = document.getElementById("month-select")
+  const daySelect = document.getElementById("day-select")
 
-        totalCount = json.count ?? 0
+  filterToggle.addEventListener("click", () => {
+    const open = filterBody.classList.toggle("hidden") === false
+    filterToggle.setAttribute("aria-expanded", String(open))
+    toggleChevron.style.transform = open ? "rotate(180deg)" : ""
+  })
 
-        if (!append) {
-          grid.innerHTML = ""
-          currentPage    = 0
+  function initChips() {
+    document.querySelectorAll(".filter-chip").forEach((chip) => {
+      const group = chip.dataset.group
+      const value = chip.dataset.value
+      const radio = chip.querySelector("input[type=radio]")
+
+      if (filters[group] === value) chip.classList.add("active")
+
+      chip.addEventListener("click", () => {
+        document.querySelectorAll(`.filter-chip[data-group="${group}"]`)
+          .forEach(c => c.classList.remove("active"))
+        chip.classList.add("active")
+        radio.checked = true
+        filters[group] = value
+
+        if (group === "decade" && value) {
+          filters.year = ""
+          yearSelect.value = ""
+        }
+        if (group === "year") {
+          filters.decade = ""
+          document.querySelectorAll(`.filter-chip[data-group="decade"]`)
+            .forEach(c => c.classList.remove("active"))
+          document.querySelector(`.filter-chip[data-group="decade"][data-value=""]`)
+            ?.classList.add("active")
         }
 
-        injectCards(json.html ?? "", append)
-        setMeta(q, totalCount)
-        syncPagination()
+        if (group === "month" && value) {
+          filters.decade = ""; filters.year = ""
+        }
 
-      } catch (err) {
-        console.error(err)
-        setEmpty(true)
-      } finally {
-        isFetching = false
-        spinner.classList.add("hidden")
-        loadMoreSpinner.classList.add("hidden")
-        loadMoreLabel.textContent = "Load more"
-      }
-    }
-
-    function injectCards(html: string, append: boolean) {
-      browsePrompt.classList.add("hidden")
-
-      if (!html && !append) {
-        setEmpty(true)
-        return
-      }
-
-      setEmpty(false)
-
-      const template = document.createElement("template")
-      template.innerHTML = html
-      const newCards = Array.from(template.content.children) as HTMLElement[]
-
-      newCards.forEach((card, i) => {
-        card.classList.add("search-card-enter")
-        grid.appendChild(card)
-        const delay = (i % LIMIT) * 40
-        setTimeout(() => card.classList.add("search-card-visible"), delay)
+        commitFilters()
       })
-    }
+    })
+  }
 
-    function setMeta(q: string, count: number) {
-      metaEl.textContent = `${count.toLocaleString()} result${count !== 1 ? "s" : ""} for "${q}"`
-      metaEl.classList.remove("opacity-0")
-      metaEl.classList.add("opacity-100")
-    }
+  yearSelect.addEventListener("change", () => {
+    filters.year   = yearSelect.value
+    filters.decade = ""
+    document.querySelectorAll(`.filter-chip[data-group="decade"]`)
+      .forEach(c => c.classList.remove("active"))
+    document.querySelector(`.filter-chip[data-group="decade"][data-value=""]`)
+      ?.classList.add("active")
+    commitFilters()
+  })
+  monthSelect.addEventListener("change", () => {
+    filters.month = monthSelect.value
+    if (!monthSelect.value) filters.day = ""
+    commitFilters()
+  })
+  daySelect.addEventListener("change", () => {
+    filters.day = daySelect.value
+    commitFilters()
+  })
 
-    function syncPagination() {
-      const shown = (currentPage + 1) * LIMIT
-      if (shown < totalCount) {
-        pagination.classList.remove("hidden")
-        pagination.classList.add("flex")
-      } else {
-        pagination.classList.add("hidden")
-        pagination.classList.remove("flex")
+  let debounceTimer
+  input.addEventListener("input", () => {
+    clearTimeout(debounceTimer)
+    filters.q = input.value.trim()
+    debounceTimer = setTimeout(commitFilters, 380)
+  })
+
+  clearAllBtn.addEventListener("click", (e) => {
+    e.stopPropagation()
+    Object.assign(filters, {
+      q: "", media_type: "", decade: "", year: "",
+      month: "", day: "", copyright: "", sort: "desc",
+    })
+    input.value = ""
+    yearSelect.value  = ""
+    monthSelect.value = ""
+    daySelect.value   = ""
+    document.querySelectorAll(".filter-chip").forEach(c => {
+      c.classList.remove("active")
+      if (c.dataset.value === "" || (c.dataset.group === "sort" && c.dataset.value === "desc")) {
+        c.classList.add("active")
       }
-    }
+    })
+    commitFilters()
+  })
 
-    function setEmpty(empty: boolean) {
-      emptyState.classList.toggle("hidden", !empty)
-      emptyState.classList.toggle("flex", empty)
-      grid.classList.toggle("hidden", empty)
-    }
+  const FILTER_LABELS = {
+    media_type: { image: "Images", video: "Videos" },
+    decade: { "2020": "2020s", "2010": "2010s", "2000": "2000s", "1990": "1990s" },
+    copyright: { "true": "Copyrighted", "false": "Public domain" },
+    sort: { asc: "Oldest first" },
+  }
+  function updateSummaryChips() {
+    activeChips.innerHTML = ""
+    const active = []
 
-    function reset() {
-      currentQuery = ""
-      grid.innerHTML = ""
-      browsePrompt.classList.remove("hidden")
-      emptyState.classList.add("hidden")
-      emptyState.classList.remove("flex")
-      grid.classList.remove("hidden")
-      pagination.classList.add("hidden")
-      pagination.classList.remove("flex")
-      metaEl.textContent = ""
-      metaEl.classList.add("opacity-0")
-    }
+    if (filters.q) active.push({ key: "q", label: `"${filters.q}"` })
+    if (filters.media_type) active.push({ key: "media_type", label: FILTER_LABELS.media_type[filters.media_type] ?? filters.media_type })
+    if (filters.decade) active.push({ key: "decade", label: FILTER_LABELS.decade[filters.decade] ?? filters.decade })
+    if (filters.year) active.push({ key: "year", label: filters.year })
+    if (filters.month) active.push({ key: "month", label: filters.day ? `${filters.month}/${filters.day}` : `Month ${filters.month}` })
+    if (filters.copyright) active.push({ key: "copyright", label: FILTER_LABELS.copyright[filters.copyright] ?? filters.copyright })
+    if (filters.sort === "asc") active.push({ key: "sort", label: "Oldest first" })
 
-    let timer: ReturnType<typeof setTimeout>
-    input.addEventListener("input", () => {
-      const q = input.value.trim()
-      clearTimeout(timer)
-      if (!q) { reset(); return }
-      timer = setTimeout(() => {
-        if (q === currentQuery) return
-        currentQuery = q
-        currentPage  = 0
-        fetchCards(q, 0, false)
-      }, 380)
+    active.forEach(({ key, label }) => {
+      const chip = document.createElement("span")
+      chip.className = "summary-chip"
+      chip.innerHTML = `${label} <button aria-label="Remove ${label}" data-key="${key}">×</button>`
+      chip.querySelector("button").addEventListener("click", (e) => {
+        e.stopPropagation()
+        const k = e.currentTarget.dataset.key
+        if (k === "month") { filters.month = ""; filters.day = ""; monthSelect.value = ""; daySelect.value = "" }
+        else if (k === "sort") filters.sort = "desc"
+        else filters[k] = ""
+        if (k === "q")     input.value = ""
+        if (k === "year")  yearSelect.value = ""
+        if (k === "decade") {
+          document.querySelectorAll(`.filter-chip[data-group="decade"]`)
+            .forEach(c => c.classList.remove("active"))
+          document.querySelector(`.filter-chip[data-group="decade"][data-value=""]`)?.classList.add("active")
+        }
+        commitFilters()
+      })
+      activeChips.appendChild(chip)
     })
 
-    loadMoreBtn.addEventListener("click", () => {
-      if (isFetching || !currentQuery) return
-      currentPage++
-      fetchCards(currentQuery, currentPage, true)
+    clearAllBtn.classList.toggle("hidden", active.length === 0)
+  }
+
+  function buildParams(extra = {}) {
+    const p = new URLSearchParams()
+    const all = { ...filters, ...extra }
+    if (all.q) p.set("q", all.q)
+    if (all.media_type) p.set("media_type", all.media_type)
+    if (all.decade) p.set("decade", all.decade)
+    if (all.year) p.set("year", all.year)
+    if (all.month) p.set("month", all.month)
+    if (all.day) p.set("day", all.day)
+    if (all.copyright) p.set("copyright", all.copyright)
+    if (all.sort && all.sort !== "desc") p.set("sort", all.sort)
+    return p
+  }
+
+  function syncUrl() {
+    const p = buildParams()
+    const url = new URL(window.location.href)
+    url.search = p.toString()
+    window.history.pushState({ ...filters }, "", url)
+  }
+
+  function hasActiveFilter() {
+    return !!(filters.q || filters.media_type || filters.decade ||
+              filters.year || filters.month || filters.copyright ||
+              filters.sort === "asc")
+  }
+
+  async function fetchCards(page, append = false) {
+    if (isFetching) return
+    isFetching = true
+
+    if (append) { loadMoreSpinner.classList.remove("hidden"); loadMoreLabel.textContent = "Loading…" }
+    else        { spinner.classList.remove("hidden") }
+
+    try {
+      const p = buildParams({ limit: LIMIT, page })
+      const res  = await fetch(`/api/search?${p}`)
+      const json = await res.json()
+      if (!res.ok) throw new Error(json.error ?? "Fetch failed")
+
+      totalCount = json.count ?? 0
+      if (!append) { grid.innerHTML = ""; currentPage = 0 }
+
+      injectCards(json.html ?? "", append)
+      updateMeta()
+      syncPagination()
+
+    } catch (err) {
+      console.error(err); setEmpty(true)
+    } finally {
+      isFetching = false
+      spinner.classList.add("hidden")
+      loadMoreSpinner.classList.add("hidden")
+      loadMoreLabel.textContent = "Load more"
+    }
+  }
+
+  function commitFilters() {
+    currentPage = 0
+    syncUrl()
+    updateSummaryChips()
+
+    if (!hasActiveFilter()) { resetResults(); return }
+    fetchCards(0, false)
+  }
+
+  function injectCards(html, append) {
+    browsePrompt.classList.add("hidden")
+    if (!html && !append) { setEmpty(true); return }
+    setEmpty(false)
+    const t = document.createElement("template")
+    t.innerHTML = html
+    Array.from(t.content.children).forEach((card, i) => {
+      card.classList.add("search-card-enter")
+      grid.appendChild(card)
+      setTimeout(() => card.classList.add("search-card-visible"), (i % LIMIT) * 40)
     })
-  });
+  }
+
+  function updateMeta() {
+    const parts = []
+    if (filters.q) parts.push(`"${filters.q}"`)
+    const count = totalCount.toLocaleString()
+    metaEl.textContent = `${count} result${totalCount !== 1 ? "s" : ""}${parts.length ? ` for ${parts.join(", ")}` : ""}`
+    metaEl.classList.remove("opacity-0"); metaEl.classList.add("opacity-100")
+  }
+
+  function syncPagination() {
+    const hasMore = (currentPage + 1) * LIMIT < totalCount
+    pagination.classList.toggle("hidden", !hasMore)
+    pagination.classList.toggle("flex",    hasMore)
+  }
+
+  function setEmpty(e) {
+    emptyState.classList.toggle("hidden", !e); emptyState.classList.toggle("flex", e)
+    grid.classList.toggle("hidden", e)
+  }
+
+  function resetResults() {
+    grid.innerHTML = ""
+    browsePrompt.classList.remove("hidden")
+    emptyState.classList.add("hidden"); emptyState.classList.remove("flex")
+    grid.classList.remove("hidden")
+    pagination.classList.add("hidden"); pagination.classList.remove("flex")
+    metaEl.textContent = ""; metaEl.classList.add("opacity-0")
+  }
+
+  loadMoreBtn.addEventListener("click", () => {
+    if (isFetching || !hasActiveFilter()) return
+    currentPage++
+    fetchCards(currentPage, true)
+  })
+
+  window.addEventListener("popstate", (e) => {
+    const s = e.state ?? Object.fromEntries(new URL(window.location.href).searchParams)
+    Object.assign(filters, {
+      q:          s.q          ?? "",
+      media_type: s.media_type ?? "",
+      decade:     s.decade     ?? "",
+      year:       s.year       ?? "",
+      month:      s.month      ?? "",
+      day:        s.day        ?? "",
+      copyright:  s.copyright  ?? "",
+      sort:       s.sort       ?? "desc",
+    })
+    input.value       = filters.q
+    yearSelect.value  = filters.year
+    monthSelect.value = filters.month
+    daySelect.value   = filters.day
+    syncChipState()
+    updateSummaryChips()
+    if (hasActiveFilter()) fetchCards(0, false)
+    else resetResults()
+  })
+
+  function syncChipState() {
+    document.querySelectorAll(".filter-chip").forEach(chip => {
+      const group = chip.dataset.group
+      const value = chip.dataset.value
+      chip.classList.toggle("active", filters[group] === value)
+    })
+  }
+
+  initChips()
+  updateSummaryChips()
+  syncChipState()
+  if (hasActiveFilter()) fetchCards(0, false)
 </script>
