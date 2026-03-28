@@ -35,7 +35,7 @@ const encodedSD = Apod.url ? encodeURIComponent(Apod.url) : "";
 const encodedHD = Apod.hdurl ? encodeURIComponent(Apod.hdurl) : "";
 const placeholder = `https://wsrv.nl/?url=${encodedSD}&w=40&output=webp&q=1&blur=3`;
 const full = `https://wsrv.nl/?url=${encodedHD}&output=webp`;
-const shareUrl = "https://astro--daily.verel.app"
+const shareUrl = `https://astro--daily.verel.app/archive/${Apod?.date.replaceAll("-", "/")}`;
 const shareTitle = "Check out this amazing Astronomy Picture";
 const shareMessage = encodeURIComponent(`${shareUrl}\nCheck out this amazing Astronomy Picture of the Day - ${Apod?.date}: ${Apod?.title}`);
 ---
@@ -143,7 +143,7 @@ const shareMessage = encodeURIComponent(`${shareUrl}\nCheck out this amazing Ast
             <Icon glyph="logo-whats-app"/>
           </button>
 
-          <button aria-label="Share on Facebook" title="Share on Facebook" onclick={`window.open('https://www.facebook.com/sharer/sharer.php?u=${Astro.url}', '_blank')`} class="hover:scale-120 transition-transform duration-300 cursor-pointer" >
+          <button aria-label="Share on Facebook" title="Share on Facebook" onclick={`window.open('https://www.facebook.com/sharer/sharer.php?u=${shareUrl}', '_blank')`} class="hover:scale-120 transition-transform duration-300 cursor-pointer" >
             <Icon glyph="logo-facebook" />
           </button>
 
