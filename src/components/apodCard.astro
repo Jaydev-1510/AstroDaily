@@ -66,22 +66,29 @@ const shareMessage = encodeURIComponent(`${shareUrl}\nCheck out this amazing Ast
     </h2>
   </header>
 
-  <figure class="w-auto relative group mb-24 animate-in fade-in zoom-in-95 duration-1000 delay-200 overflow-hidden" >
+  <figure class="w-auto relative group mb-24 animate-in fade-in zoom-in-95 duration-1000 delay-200 overflow-visible" >
     <div aria-hidden="true" class="absolute inset-0 bg-white/5 blur-3xl rounded-2xl opacity-20 group-hover:opacity-30 transition-opacity" ></div>
-    <div class="rounded-3xl md:rounded-[2.5rem] overflow-hidden">
+    <div class="rounded-3xl md:rounded-[2.5rem]">
       {Apod?.media_type === "video" ?
         (
           <video src={Apod.url} title={Apod?.title || "NASA APOD Video"} controls autoplay muted loop playsinline class="relative w-auto h-[calc(100dvh-160px)] object-cover rounded-3xl md:rounded-[2.5rem] border border-white/10 shadow-2xl shadow-black" />
         ) : (
-        <img width={500} height={800} loading="eager" src={placeholder} data-src={full} alt={Apod?.title || `NASA Astronomy Picture of the Day - ${Apod.date}`} class="relative w-auto h-[calc(100dvh-160px)] mx-auto object-cover rounded-3xl transition-all ease-in-out duration-500 md:rounded-[2.5rem] border border-white/10 shadow-2xl shadow-black blur-xl scale-110"
+        <img width={500} height={800} loading="eager" src={placeholder} data-src={full} alt={Apod?.title || `NASA Astronomy Picture of the Day - ${Apod.date}`} class="relative w-auto h-[calc(100dvh-160px)] mx-auto object-cover rounded-3xl transition-all ease-in-out duration-500 md:rounded-[2.5rem] border border-white/10 blur-xl scale-110"
           onload="if (this.dataset.src && this.src !== this.dataset.src) {
             const full = new Image();
             full.onload = () => { this.src = this.dataset.src; this.classList.remove('blur-xl', 'scale-110'); };
             full.src = this.dataset.src;
           }"
         />
+        <img width={500} height={800} loading="eager" src={placeholder} data-src={full} alt={Apod?.title || `NASA Astronomy Picture of the Day - ${Apod.date}`} class="absolute inset-0 w-auto h-[calc(100dvh-160px)] mx-auto object-cover rounded-3xl transition-all ease-in-out duration-500 md:rounded-[2.5rem] blur-2xl scale-120 opacity-40"
+          onload="if (this.dataset.src && this.src !== this.dataset.src) {
+            const full = new Image();
+            full.onload = () => { this.src = this.dataset.src; };
+            full.src = this.dataset.src;
+          }"
+        />
       )}
-      <figcaption class="absolute md:bottom-6 md:right-8 bottom-3 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex gap-1" >
+      <figcaption class="absolute md:bottom-6 md:right-8 bottom-1.5 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex gap-1" >
         <p class="text-[10px] text-right tracking-widest uppercase text-white/50 bg-black/40 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10" >
           &copy; {Apod?.copyright || "NASA"}
         </p>
