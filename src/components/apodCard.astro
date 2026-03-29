@@ -48,7 +48,7 @@ const encodedSD = Apod.url ? encodeURIComponent(Apod.url) : "";
 const encodedHD = Apod.hdurl ? encodeURIComponent(Apod.hdurl) : "";
 const placeholder = `https://wsrv.nl/?url=${encodedSD}&w=40&output=webp&q=1&blur=3`;
 const full = `https://wsrv.nl/?url=${encodedHD}&output=webp`;
-const shareUrl = `https://astro--daily.verel.app/archive/${Apod?.date.replaceAll("-", "/")}`;
+const shareUrl = `https://astro--daily.vercel.app/archive/${Apod?.date.replaceAll("-", "/")}`;
 const shareTitle = "Check out this amazing Astronomy Picture";
 const shareMessage = encodeURIComponent(`${shareUrl}\nCheck out this amazing Astronomy Picture of the Day - ${Apod?.date}: ${Apod?.title}`);
 ---
