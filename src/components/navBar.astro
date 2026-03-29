@@ -45,7 +45,7 @@ const latestDate: string = latestApod.date;
         })}
       </ul>
 
-      <span class="hidden md:inline-block text-[10px] font-mono text-zinc-400/80 bg-zinc-500/10 px-2 py-1 rounded-4xl border border-zinc-500/20">
+      <span title={lastDate === latestDate ? "The data is latest. Live telemetry from NASA" : "New APODs found! but not available, devs' working behind..."} class="hidden md:inline-block text-[10px] font-mono text-zinc-400/80 bg-zinc-500/10 px-2 py-1 rounded-4xl border border-zinc-500/20">
         {lastDate === latestDate ? "LIVE_DATA" : "OLD_DATA"}
       </span>
 
