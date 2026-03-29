@@ -4,6 +4,10 @@ A polished archive and explorer for NASA's Astronomy Picture of the Day — ever
 
 **[astro-daily.vercel.app](https://astro--daily.vercel.app)** · Built with Astro.js, Supabase & Vercel
 
+> Get images from space everyday!
+
+![banner](/public/banner.png)
+
 ---
 
 ## What is this?
